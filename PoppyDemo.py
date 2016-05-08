@@ -56,8 +56,3 @@ while True:
 poppy.l_arm_z.goal_position = -15
 poppy.r_arm_z.goal_position = 15
 
-
-
-
-
-HAHA
