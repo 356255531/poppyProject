@@ -57,13 +57,6 @@ poppy.l_arm_z.goal_position = -15
 poppy.r_arm_z.goal_position = 15
 
 
-# In[69]:
-
-from IPython.display import VimeoVideo
-VimeoVideo(127023576)
-
-
-# In[ ]:
 
 
 
