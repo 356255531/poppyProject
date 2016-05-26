@@ -14,7 +14,7 @@ You can find a useful tutorial about how to install and use it at the link below
 http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/
 
 # V-rep Short Guideline
-You can find an interesting toturial under the given link:  
++ You can find an interesting toturial under the given link:  
 https://github.com/poppy-project/community-notebooks/blob/master/demo/poppy-humanoid_Controlling%20in%20V-REP%20using%20pypot.ipynb
 
 # Controller Common Issue Sheet
