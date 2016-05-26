@@ -3,10 +3,10 @@
 + It will tell you how to start working with controller.
 
  Note:
-1.	The Ubuntu and Poppy environment has already been set up.
-2.	Please make sure eMMC-module is successfully connected on the board before boot.
-3.	Wireless communication is also possible after USB wireless module has been inserted. If not, please use desktop model to check the wireless setup.
-4.	After booting, when blue LED should blink in a heart-beat model. If not, please check it by using desktop model with a HDMI cable. 
++ 1.	The Ubuntu and Poppy environment has already been set up.
++ 2.	Please make sure eMMC-module is successfully connected on the board before boot.
++ 3.	Wireless communication is also possible after USB wireless module has been inserted. If not, please use desktop model to check the wireless setup.
++ 4.	After booting, when blue LED should blink in a heart-beat model. If not, please check it by using desktop model with a HDMI cable. 
 
 Steps:
 1.	Connect all the Peripherals you need and you can open the Web-Interface by taping in http://poppy.local in your browser.
