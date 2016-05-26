@@ -1,10 +1,21 @@
 # Before Start
++ Official Project Web:  
+https://www.poppy-project.org/creatures/get-started-with-poppy/
 + Official Documentation of Poppy Project:  
 http://docs.poppy-project.org/en/getting-started/  
 + Poppy Forum:  
 https://forum.poppy-project.org/
 + Poppy Head Assembly:  
 https://github.com/poppy-project/poppy-humanoid/blob/master/hardware/doc/en/head_assembly.md
+
+# Program IDE
+The program will ideally done in jupyter notebook. It's more convenient to write and test code in block and you can also all description in it.  
+You can find a useful tutorial about how to install and use it at the link below:  
+http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/
+
+# V-rep Short Guideline
+Your can find an interesting toturial under the given link:  
+https://github.com/poppy-project/community-notebooks/blob/master/demo/poppy-humanoid_Controlling%20in%20V-REP%20using%20pypot.ipynb
 
 # Controller Common Issue Sheet
 This chapter serves mainly as a simple guide of Odroid board in Poppy development.  
@@ -22,4 +33,4 @@ Steps:
 + 3. If it dosen't work firstly follow the official documentation http://docs.poppy-project.org/en/getting-started/connect.html 
 + 4. And if it is still not helpful please reinstall the system under the link https://github.com/poppy-project/odroid-poppysetup
 
-# V-rep Short Guideline
+
