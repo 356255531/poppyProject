@@ -2,7 +2,7 @@
 This chapter serves mainly as a simple guide of Odroid board in Poppy development.  
 It will tell you how to start working with controller.
 
- Note:
+Note:
 + 1.	The Ubuntu and Poppy environment has already been set up.
 + 2.	Please make sure eMMC-module is successfully connected on the board before boot.
 + 3.	Wireless communication is also possible after USB wireless module has been inserted. If not, please use desktop model to check the wireless setup.
