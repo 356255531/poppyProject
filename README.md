@@ -1,3 +1,9 @@
+# Before Start
+Official Documentation of Poppy Project:  
+http://docs.poppy-project.org/en/getting-started/
+Poppy Forum:  
+https://forum.poppy-project.org/
+
 # Controller Common Issue Sheet
 This chapter serves mainly as a simple guide of Odroid board in Poppy development.  
 It will tell you basic knowledge about how to start working with controller.
