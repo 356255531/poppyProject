@@ -13,3 +13,5 @@ Steps:
 + 2. When there is a connection problem, please first check if the board has access to the Net (Also in desktop model).
 + 3. If it dosen't work firstly follow the official documentation http://docs.poppy-project.org/en/getting-started/connect.html 
 + 4. And if it is still not helpful please reinstall the system under the link https://github.com/poppy-project/odroid-poppysetup
+
+# V-rep Descpription
