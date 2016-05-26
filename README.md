@@ -35,8 +35,7 @@ Note:
 + 2.	Please make sure eMMC-module is successfully connected on the board before boot.
 + 3.	Wireless communication is also possible after USB wireless module has been inserted. If not, please use desktop model to check the wireless setup.
 + 4.	After booting, when blue LED should blink in a heart-beat model. If not, please check it by using desktop model with a HDMI cable. 
-If it dosen't work firstly follow the official documentation http://docs.poppy-project.org/en/getting-started/connect.html 
-And if it is still not helpful please reinstall the system under the link https://github.com/poppy-project/odroid-poppysetup
+If it dosen't work firstly follow the official documentation http://docs.poppy-project.org/en/getting-started/connect.html.  And if it is still not helpful please reinstall the system under the link https://github.com/poppy-project/odroid-poppysetup
 
 Steps:
 + 1.	Connect all the Peripherals you need and you can open the Web-Interface by taping in http://poppy.local in your browser.
