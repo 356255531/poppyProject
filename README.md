@@ -1,7 +1,10 @@
 # Before Start
-+ Official Documentation of Poppy Project: http://docs.poppy-project.org/en/getting-started/  
-+ Poppy Forum: https://forum.poppy-project.org/
-+ Poppy Head Assembly: https://github.com/poppy-project/poppy-humanoid/blob/master/hardware/doc/en/head_assembly.md
++ Official Documentation of Poppy Project:  
+http://docs.poppy-project.org/en/getting-started/  
++ Poppy Forum:  
+https://forum.poppy-project.org/
++ Poppy Head Assembly:  
+https://github.com/poppy-project/poppy-humanoid/blob/master/hardware/doc/en/head_assembly.md
 
 # Controller Common Issue Sheet
 This chapter serves mainly as a simple guide of Odroid board in Poppy development.  
