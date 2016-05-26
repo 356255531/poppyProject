@@ -30,16 +30,18 @@ Note:
 This chapter serves mainly as a simple guide of Odroid board in Poppy development.  
 It will tell you basic knowledge about how to start working with controller.
 
+Steps:
++ 1.	Connect all the Peripherals you need.
++ 2. Plug in the power cable and enpower it. After waiting for several seconds the blue LED on board should blink in a heart-beat model.
++ 3. Then open the Web-Interface by taping in http://poppy.local in your browser.
++ 4. Program in jupyter notebook and run it directly.
++ 5. When there is a problem occured, please first check the notes listed below.
+
 Note:
-+ 1.	The Ubuntu and Poppy environment has already been set up.
++ 1.	The Ubuntu and Poppy environment and everything needed has already been set up.
 + 2.	Please make sure eMMC-module is successfully connected on the board before boot.
 + 3.	Wireless communication is also possible after USB wireless module has been inserted. If not, please use desktop model to check the wireless setup.
-+ 4.	After booting, when blue LED should blink in a heart-beat model. If not, please check it by using desktop model with a HDMI cable. 
++ 4.	After booting, when blue LED should blink in a heart-beat model. If not, please check it by using desktop model with a HDMI cable whether it's off-line. 
 If it dosen't work firstly follow the official documentation http://docs.poppy-project.org/en/getting-started/connect.html.  And if it is still not helpful please reinstall the system under the link https://github.com/poppy-project/odroid-poppysetup
-
-Steps:
-+ 1.	Connect all the Peripherals you need and you can open the Web-Interface by taping in http://poppy.local in your browser.
-+ 2. When there is a connection problem, please first check if the board has access to the Net (Also in desktop model).
-
 
 
