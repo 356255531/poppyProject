@@ -1,6 +1,6 @@
 # Controller Common Issue Sheet
- This chapter serves mainly as a simple guide of Odroid board in Poppy development.
- It will tell you how to start working with controller.
++ This chapter serves mainly as a simple guide of Odroid board in Poppy development.
++ It will tell you how to start working with controller.
 
  Note:
 1.	The Ubuntu and Poppy environment has already been set up.
