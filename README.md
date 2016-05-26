@@ -1,6 +1,6 @@
 # Before Start
 Official Documentation of Poppy Project:  
-http://docs.poppy-project.org/en/getting-started/
+http://docs.poppy-project.org/en/getting-started/  
 Poppy Forum:  
 https://forum.poppy-project.org/
 
