@@ -19,6 +19,12 @@ https://github.com/poppy-project/community-notebooks/blob/master/demo/poppy-huma
 + In order to know how to interact with object in V-rep please go to link:
 https://github.com/poppy-project/poppy-torso/blob/ff6254355ce18a26f58654f5abc82485a7a22d13/software/doc/tutorial/Poppy%20Torso%20interacting%20with%20objects%20in%20V-REP%20using%20Pypot.ipynb  
 The enviroment is for poppy-torso and slightly different from humanoid and just adaptive it.
++ There is also a Demo for how to set up Poppy-Torso enviroment in the repository.
+
+Note:
++ Be careful that VREP is often displaying pop-up that freezes the communication with pypot. You will have to close them otherwise a timeout will occur!
++ Or you will have a problem with your jupyter python kernel!
+
 
 # Controller Common Issue Sheet
 This chapter serves mainly as a simple guide of Odroid board in Poppy development.  
