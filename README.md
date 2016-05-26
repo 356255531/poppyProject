@@ -1,5 +1,5 @@
 # Controller Common Issue Sheet
-This chapter serves mainly as a simple guide of Odroid board in Poppy development.
++ >This chapter serves mainly as a simple guide of Odroid board in Poppy development.
 It will tell you how to start working with controller.
 
 Note:
