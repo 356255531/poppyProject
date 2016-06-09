@@ -6,11 +6,8 @@ class actor(pseudoCV):
 	def __init__(self, poppy, io, name, positionMatrix):
 		pseudoCV.__init__(self, poppy, io, name, positionMatrix)
 
-	def getSuccessor(self, action):
+	def getAllPosition(self):
 
-	def getAllState(self):
+	def takeAction(self):
 
-	def getActions(self):
-
-
-		
+	def getInitialState(self):
