@@ -65,43 +65,17 @@ class pseudoCV():
             angle1 = -angle1
         return angle1, angle2
 
-    # Output the state of problem
-    def getState(self):
+    # Output the position of problem
+    def getPosition(self):
         angle = self.canSeeJudge()
         m, n = self.positionMatrix
         if not angle:
             return []
         angle1, angle2 = angle
-        state1 = math.ceil(abs(np.sin(angle1 / 180.0 * 3.14159) / np.sin(37 / 180.0 * 3.14159) * m))
-        state2 = math.ceil(abs(np.sin(angle2 / 180.0 * 3.14159) / np.sin(18.5 / 180.0 * 3.14159) * m))
+        x = math.ceil(abs(np.sin(angle1 / 180.0 * 3.14159) / np.sin(37 / 180.0 * 3.14159) * m))
+        y = math.ceil(abs(np.sin(angle2 / 180.0 * 3.14159) / np.sin(18.5 / 180.0 * 3.14159) * m))
         if angle1 > 0:
-            state1 = -state1
+            x = -x
         if angle2 < 0:
-            state2 = -state2
-        return (state1, state2)
-
-
-from poppy.creatures import PoppyTorso
-import numpy as np
-import time
-import math
-
-poppy = PoppyTorso(simulator='vrep')
-
-# Add object
-io = poppy._controllers[0].io
-name = 'cube'
-position = [0, -0.15, 0.85] # X, Y, Z
-sizes = [0.1, 0.1, 0.1] # in meters
-mass = 0 # in kg
-io.add_cube(name, position, sizes, mass)
-time.sleep(1)
-name1 = 'cube2'
-position1 = [0, -1, 0.5]
-sizes1 = [3, 1, 1]
-io.add_cube(name1, position1, sizes1, mass)
-io.set_object_position('cube', position=[0, -1, 1.02])
-
-positionMatrix = [25, 20]
-CV = pseudoCV(poppy, io, name, positionMatrix)
-print CV.getState()
+            y = -y
+        return (x, y)

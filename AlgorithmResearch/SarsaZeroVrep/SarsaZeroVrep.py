@@ -21,12 +21,12 @@ class SarsaZeroVrep(actor):
 
 	def getInitialState(self):
 		actor.randMove()
-		x, y = actor.getPosition()
+		x, y = actor.getCurrentPosition()
 		euclideanDis = np.sqrt(x ** 2 + y ** 2)
 		return ((x, y), euclideanDis)
 
 	def getAllStates(self):
-		locations = actor.getAllLocations()
+		positions = actor.getAllPositions()
 
 		allStates = []
 		for i in locations:
@@ -77,8 +77,8 @@ class SarsaZeroVrep(actor):
 				action = max(self.qFunc[currentState].iteritems(), key=operator.itemgetter(1))[0]
 
 			while not ifTerminal(currentState):
-				actor.takeAction(currentState, action)
-				nextState = actor.getSuccessor(currentState, action)
+				actor.takeAction(list(currentState)[0], action)
+				nextState = self.getSuccessor(currentState, action)
 				rewardValue = self.getReward(currentState, nextState)
 
 				nextActions = self.allActions(nextState)
