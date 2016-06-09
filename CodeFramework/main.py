@@ -16,7 +16,7 @@ def run_learning(actor, learning_algorithm, reward, state_observer):
 
     current_state = state_observer.get_current_state()
 
-    while True:
+    while current_state:
         next_action = learning_algorithm.get_next_action(current_state)
         actor.perform_action(next_action)
         next_state = state_observer.get_current_state()
@@ -25,4 +25,16 @@ def run_learning(actor, learning_algorithm, reward, state_observer):
         current_state = next_state
 
 if __name__ == '__main__':
-    
+    from dummy_classes import *
+
+    dummy_states_actions = DummyStateActionSpace()
+    dummy_states_actions.states[0] = 2 #because I defined the loop to run while current state wasn't 0/false
+
+    dummy_actor = DummyActor()
+    dummy_observer = DummyObserver(dummy_states_actions, dummy_actor)
+    dummy_learner = DummyLearner(dummy_states_actions)
+    dummy_reward = DummyReward(dummy_states_actions)
+
+    run_learning(dummy_actor, dummy_learner, dummy_reward, dummy_observer)
+
+    print "Values: " + str(dummy_learner.values)
