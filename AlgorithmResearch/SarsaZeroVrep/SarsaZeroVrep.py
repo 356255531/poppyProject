@@ -7,7 +7,7 @@ import operator
 
 class SarsaZeroVrep(actor):
 	"""docstring for SarsaZeroVrep"""
-	def __init__(self, actor, poppy, io, name, positionMatrix, errorAfterTrained, epsilonGreedy):
+	def __init__(self, poppy, io, name, positionMatrix, errorAfterTrained, epsilonGreedy):
 
 		actor.__init__(self, poppy, io, name, positionMatrix)
 
