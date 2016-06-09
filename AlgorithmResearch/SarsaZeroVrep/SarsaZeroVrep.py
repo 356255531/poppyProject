@@ -2,18 +2,28 @@ __author__ = 'Zhiwei Han'
 
 from actor import actor
 import numpy as np
-import random
+import random as rd
 import operator
 
 class SarsaZeroVrep(actor):
 	"""docstring for SarsaZeroVrep"""
 	def __init__(self, actor, poppy, io, name, positionMatrix, errorAfterTrained, epsilonGreedy):
+
 		actor.__init__(self, poppy, io, name, positionMatrix)
+
+		self.positionMatrix = positionMatrix
 		self.errorAfterTrained = errorAfterTrained
 		self.epsilonGreedy = epsilonGreedy
-		self.positionMatrix
-		self.allStates = self.getAllStates()  # Initialize the states
-		self.allActions = self.getAllActions()
+
+		self.allStates = self.getAllStates()  		# Initialize the state list
+		self.allActions = self.getAllActions()		# Initialize the action list
+		self.qFunc = self.initializeQFunc()			# Initialize the Q function
+
+	def getInitialState(self):
+		actor.randMove()
+		x, y = actor.getPosition()
+		euclideanDis = np.sqrt(x ** 2 + y ** 2)
+		return ((x, y), euclideanDis)
 
 	def getAllStates(self):
 		locations = actor.getAllLocations()
@@ -29,7 +39,6 @@ class SarsaZeroVrep(actor):
 			allActions.append(actor.getActions(i))
 		return allActions
 
-
 	def getSuccessor(self, currentState, action):
 		diffX, diffY = action
 		x, y = currentState
@@ -43,41 +52,43 @@ class SarsaZeroVrep(actor):
 		return euclideanDisCur - euclideanDisNext
 
 	def initializeQFunc(self):
+		qFunc = {}
 		for i in self.allStates:
-			allActions = actor.getActions(i)
-			self.qFunc[i] = {j:0 for j in allActions}
+			qFunc[i] = {j:0 for j in self.allActions[i]}
+		return qFunc
 
 	def train(self):
-		self.initializeQFunc()
+		self.qFunc = self.initializeQFunc()
 
 		count = 0
 		while count < 3 * len(self.allStates):
 			ifTerminal = lambda x: return list(x)[0] == (0, 0)
 
-			qFuncBefor = qFunc
-			currentState = actor.getInitialState()
+			qFuncBefor = self.qFunc
+			currentState = self.getInitialState()
+
 			while ifTerminal(currentState):
-				currentState = actor.getInitialState()
+				currentState = self.getInitialState()
 
-
-			actions = actor.getActions(currentState)
-			if random.random < self.epsilonGreedy:
-				action = actions[random.randint(0, len(actions) + 1)]
+			actions = self.allActions(currentState)
+			if rd.random < self.epsilonGreedy:
+				action = actions[rd.randint(0, len(actions) + 1)]
 			else:
-				action = max(actions.iteritems(), key=operator.itemgetter(1))[0]
+				action = max(self.qFunc[currentState].iteritems(), key=operator.itemgetter(1))[0]
 
-			while ifTerminal(currentState):
+			while not ifTerminal(currentState):
+				actor.takeAction(currentState, action)
 				nextState = actor.getSuccessor(currentState, action)
 				rewardValue = self.getReward(currentState, nextState)
 
-				nextActions = actor.getActions(nextState)
-				if random.random < self.epsilonGreedy:
-					nextAction = nextActions[random.randint(0, len(nextActions) + 1)]
+				nextActions = self.allActions(nextState)
+				if rd.random < self.epsilonGreedy:
+					nextAction = nextActions[rd.randint(0, len(nextActions) + 1)]
 				else:
-					nextAction = max(nextActions.iteritems(), key=operator.itemgetter(1))[0]
+					nextAction = max(self.qFunc[nextState].iteritems(), key=operator.itemgetter(1))[0]
 
-				TDError = alpha * (rewardValue + gama * qFunc[(nextState, nextAction)] - qFunc[(currentState, action)])
-				qFunc[(currentState, action)]  = qFunc[(currentState, action)] + TDError
+				TDError = alpha * (rewardValue + gama * qFunc[nextState][nextAction] - qFunc[currentState][action])
+				qFunc[currentState][action]  = qFunc[currentState][action] + TDError
 
 				currentState = nextState
 				action = nextAction
