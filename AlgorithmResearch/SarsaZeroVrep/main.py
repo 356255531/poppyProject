@@ -1,6 +1,14 @@
 from poppy.creatures import PoppyTorso
 import numpy as np
 import time
+import random as rd
+
+from stateActionSpace import stateActionSpace
+from pseudoStateObserver import pseudoStateObserver 
+from actor import actor
+from reward import reward
+from problem import problem
+
 from SarsaZeroVrep import SarsaZeroVrep
 
 poppy = PoppyTorso(simulator='vrep')
@@ -22,4 +30,10 @@ io.set_object_position('cube', position=[0, -1, 1.05])
 positionMatrix = [25, 20]
 errorAfterTrained = 10e-6
 epsilonGreedy = 0.1
-Sarsa0InVrep = SarsaZeroVrep(self, poppy, io, name, positionMatrix, errorAfterTrained, epsilonGreedy)
+
+p = pseudoStateObserver(poppy, io, name, positionMatrix)
+a = actor(poppy, io, name, positionMatrix)
+r = reward()
+s = stateActionSpace(positionMatrix)
+pro = problem(p,a,r,s)
+Sarsa0InVrep = SarsaZeroVrep(pro, errorAfterTrained, epsilonGreedy)

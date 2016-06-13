@@ -1,4 +1,6 @@
 __author__ = 'Zhiwei Han'
+import numpy as np
+import math
 
 class pseudoCV():
     """docstring for pseudoCV"""
@@ -72,10 +74,13 @@ class pseudoCV():
         if not angle:
             return []
         angle1, angle2 = angle
-        x = math.ceil(abs(np.sin(angle1 / 180.0 * 3.14159) / np.sin(37 / 180.0 * 3.14159) * m))
-        y = math.ceil(abs(np.sin(angle2 / 180.0 * 3.14159) / np.sin(18.5 / 180.0 * 3.14159) * m))
+        x = math.floor(abs(np.sin(angle1 / 180.0 * 3.14159) / np.sin(37 / 180.0 * 3.14159) * (m + 1)))
+        y = math.floor(abs(np.sin(angle2 / 180.0 * 3.14159) / np.sin(18.5 / 180.0 * 3.14159) * (n + 1)))
         if angle1 > 0:
             x = -x
         if angle2 < 0:
             y = -y
         return (x, y)
+
+if __name__ == '__main__':
+    print math.floor(abs(np.sin(36 / 180.0 * 3.14159) / np.sin(37 / 180.0 * 3.14159) * 26))
