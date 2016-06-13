@@ -59,6 +59,8 @@ class actor(pseudoStateObserver, actorAb):
 
 	def randMove(self, stateSpace):
 		goalState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
+		while goalState == (0, 0):
+			goalState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
 		while abs(list(goalState)[0]) == list(self.positionMatrix)[0] or abs(list(goalState)[1]) == list(self.positionMatrix)[1]:
 			goalState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
 		x, y = super(actor, self).getCurrentState()

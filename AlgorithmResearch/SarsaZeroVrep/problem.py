@@ -37,6 +37,9 @@ class problem(object):
 		nextState = (x + diffX, y + diffY)
 		return reward.get_rewards(currentState, action, nextState)
 
+	def getCurrentState(self):
+		return self.pseudoStateObserver.getCurrentState()
+
 if __name__ == '__main__':
 	from poppy.creatures import PoppyTorso
 	import numpy as np
@@ -70,4 +73,4 @@ if __name__ == '__main__':
 	s = stateActionSpace(positionMatrix)
 	pro = problem(p,a,r,s)
 
-	print pro.getSuccessor((0, -3), (10, 10))
+	print pro.getInitialState()
