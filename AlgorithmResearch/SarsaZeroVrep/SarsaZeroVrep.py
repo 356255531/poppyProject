@@ -7,9 +7,11 @@ import operator
 
 class SarsaZeroVrep(object):
 	"""docstring for SarsaZeroVrep"""
-	def __init__(self, problem, errorAfterTrained, epsilonGreedy):
-		self.errorAfterTrained = errorAfterTrained
+	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma):
 		self.epsilonGreedy = epsilonGreedy
+		self.numEpisoid = numEpisoid
+		self.alpha = alpha
+		self.gamma = gamma
 
 		self.problem = problem
 
@@ -23,47 +25,53 @@ class SarsaZeroVrep(object):
 			qFunc[i] = {j:0 for j in self.actionSpace[i]}
 		return qFunc
 
-	def train(self):
-		self.qFunc = self.initializeQFunc()
+	def epsilonGreedySelection(self, currentState):
+		if rd.random() > self.epsilonGreedy:
+			actions = list(self.actionSpace[currentState])
+			action = actions[rd.randint(0, len(actions) - 1)]
+			return action
+		else:
+			actions = self.qFunc[currentState].items()
+			action = max(actions.iteritems(), key=operator.itemgetter(1))[0]
+			return action
 
-		count = 0
-		while count < 3 * len(self.problem.getStateSpace):
-			ifTerminal = lambda x: list(x)[0] == (0, 0)
+	def updateQFunc(self, currentState, action, reward, nextState):
+		tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
+		self.qFunc[currentState][action] = self.qFunc[currentState][action] + alpha * tdError
 
-			qFuncBefor = self.qFunc
-			currentState = self.problem.getInitialState()
+	def trainEpisoid(self):
+		ifTerminal = lambda x: list(x)[0] == list(x)[1] == 0
 
-			while ifTerminal(currentState):
-				currentState = self.problem.getInitialState()
+		visitedStates = []
+		currentState = self.problem.getInitialState()
+		visitedStates.append(currentState)
+		step = 0
+		totalReward = 0
 
-			actions = self.problem.getActionSpace(currentState)
-			if rd.random < self.epsilonGreedy:
-				action = actions[rd.randint(0, len(actions) + 1)]
-			else:
-				action = max(self.qFunc[currentState].iteritems(), key=operator.itemgetter(1))[0]
+		action = self.epsilonGreedySelection(currentState)
+		while len(list(currentState)) != 0 and not ifTerminal(currentState):
+			problem.takeAction(action)
+			nextState = problem.getCurrentState()
+			reward = self.problem.getReward(currentState, action, nextState)
+			totalReward += reward
 
-			while not ifTerminal(currentState):
-				self.problem.takeAction(currentState, action)
-				nextState = self.problem.getSuccessor(currentState, action)
-				reward = self.problem.getReward(currentState, nextState, nextState)
+			nextAction = self.epsilonGreedySelection(nextState)
 
-				nextActions = self.problem.getActionSpace(nextState)
-				if rd.random < self.epsilonGreedy:
-					nextAction = nextActions[rd.randint(0, len(nextActions) + 1)]
-				else:
-					nextAction = max(self.qFunc[nextState].iteritems(), key=operator.itemgetter(1))[0]
+			self.updateQFunc(currentState, action, reward, nextState)
 
-				TDError = alpha * (reward + gama * qFunc[nextState][nextAction] - qFunc[currentState][action])
-				qFunc[currentState][action]  = qFunc[currentState][action] + TDError
+			currentState = nextState
+			visitedStates.append(currentState)
+			action = nextAction
 
-				currentState = nextState
-				action = nextAction
+			step += 1
+		return step, totalReward, visitedStates
+
+	def trainModel(self):
+		for i in xrange(self.numEpisoid):
+			self.trainEpisoid()
+			self.epsilonGreedy *= 0.99
 
 
-			if qError < self.errorAfterTrained:
-				count += 1
-			else:
-				count = 0
 
 	def derivePolicy(self):
 		policy = {}
