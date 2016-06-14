@@ -4,27 +4,36 @@ import numpy as np
 import random as rd
 import operator
 
-class sarsaZero(object):
+class sarsaLambda(object):
 	"""docstring for SarsaZeroVrep"""
-	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma):
+	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma, lambdaDiscount, delta):
 		self.epsilonGreedy = epsilonGreedy
 		self.numEpisoid = numEpisoid
 		self.alpha = alpha
 		self.gamma = gamma
+		self.lambdaDiscount = lambdaDiscount
+		self.delta = delta
 
 		self.problem = problem
 
 		self.stateSpace = self.problem.getStateSpace()  		# Initialize the state list
 		self.actionSpace = self.problem.getActionSpace()		# Initialize the action list
-		self.qFunc = self.initializeQFunc()						# Initialize the Q function
+		self.qFunc = self.initQFfunc()							# Initialize the Q function
+		self.eligibility = self.initEligibility()				# Initialize the Eligibility
 
-	def initializeQFunc(self):
+	def initQFfunc(self):
 		""" Initialize the Q function 
 			used in constructor """
 		qFunc = {}
 		for i in self.stateSpace:
 			qFunc[i] = {j:0 for j in self.actionSpace[i]}
 		return qFunc
+
+	def initEligibility(self):
+		eligibility = {}
+		for i in self.stateSpace:
+			eligibility[i] = {j:0 for j in self.actionSpace[i]}
+		return eligibility
 
 	def epsilonGreedySelection(self, currentState):
 		""" Pick the action from action space with given state by 
@@ -43,10 +52,14 @@ class sarsaZero(object):
 				next state by weighted TD error """
 		if len(list(nextState)) != 0:
 			tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
-			self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.alpha * tdError, 3)
 		else:
 			tdError = reward + self.gamma * -100 - self.qFunc[currentState][action]
-			self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.alpha * tdError, 3)
+		self.eligibility[currentState][action] += 1
+		for i in self.stateSpace:
+			for j in self.actionSpace:
+				self.qFunc[currentState][action] += self.alpha * self.delta * self.eligibility[currentState][action]
+				self.eligibility[currentState][action] = self.gamma * self.lambdaDiscount * self.eligibility[currentState][action]
+		self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.alpha * tdError, 3)
 
 	def trainEpisoid(self):
 		""" Train the model with only one episoid and 
@@ -55,12 +68,17 @@ class sarsaZero(object):
 		ifTerminal = lambda x: list(x)[0] == list(x)[1] == 0
 
 		visitedStates = []
+
 		currentState = self.problem.getInitialState()
 		visitedStates.append(currentState)
+
+		self.initEligibility()
+
 		step = 0
 		totalReward = 0
 
-		action = self.epsilonGreedySelection(currentState)
+		actions = self.actionSpace[currentState]
+		action = actions[rd.randint(0, len(actions) - 1)]
 		while len(list(currentState)) != 0 and not ifTerminal(currentState):  	# Check if the algorithm has reached the terminal
 			self.problem.takeAction(currentState, action)						# or the object is already out of sight 
 			nextState = self.problem.getCurrentState()
