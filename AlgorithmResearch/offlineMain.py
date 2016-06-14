@@ -7,7 +7,8 @@ from Modules.stateActionSpace import stateActionSpace
 from reward import reward
 from Modules.offlineProblem import offlineProblem
 
-from SarsaZero import SarsaZero
+from sarsaZero import sarsaZero
+from sarsaLambda import sarsaLambda
 
 
 ################################### Reinforcement Learning ###################################
@@ -16,11 +17,15 @@ epsilonGreedy = 0.1
 alpha = 0.1
 gamma = 0.7
 numEpisoids = 200
+lambdaDiscount = 0.9
+delta = 0.8
 
 r = reward()
 s = stateActionSpace(positionMatrix)
 pro = offlineProblem(r,s)
-Sarsa0InVrep = SarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
+
+# Sarsa0InVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
+Sarsa0InVrep = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount, delta)
 
 Sarsa0InVrep.trainModel()
 print '\n\n\n\n\n\n'
