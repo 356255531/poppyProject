@@ -3,13 +3,13 @@ import numpy as np
 import time
 import random as rd
 
-from stateActionSpace import stateActionSpace
-from pseudoStateObserver import pseudoStateObserver 
-from actor import actor
+from Modules.stateActionSpace import stateActionSpace
+from Modules.pseudoStateObserver import pseudoStateObserver 
+from Modules.actor import actor
 from reward import reward
-from problem import problem
+from Modules.problemPseudoCV import problemPseudoCV
 
-from SarsaZeroVrep import SarsaZeroVrep
+from SarsaZero import SarsaZero
 
 poppy = PoppyTorso(simulator='vrep')
 
@@ -42,8 +42,8 @@ p = pseudoStateObserver(poppy, io, name, positionMatrix)
 a = actor(poppy, io, name, positionMatrix)
 r = reward()
 s = stateActionSpace(positionMatrix)
-pro = problem(p,a,r,s)
-Sarsa0InVrep = SarsaZeroVrep(pro, epsilonGreedy, numEpisoids, alpha, gamma)
+pro = problemPseudoCV(p,a,r,s)
+Sarsa0InVrep = SarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
 
 Sarsa0InVrep.trainModel()
 print Sarsa0InVrep.getPolicy()
