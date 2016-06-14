@@ -85,8 +85,6 @@ class SarsaZeroVrep(object):
 				print j, ':', self.qFunc[j]
 			self.epsilonGreedy *= 0.99
 
-
-
 	def derivePolicy(self):
 		policy = {}
 		for i in self.allStates:
