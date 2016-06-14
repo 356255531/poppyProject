@@ -87,12 +87,10 @@ class SarsaZeroVrep(object):
 
 	def derivePolicy(self):
 		policy = {}
-		for i in self.allStates:
-			optimalAction = max(qFunc[i].iteritems(), key=operator.itemgetter(1))[0]
+		for i in self.stateSpace:
+			optimalAction = max(self.qFunc[i].iteritems(), key=operator.itemgetter(1))[0]
 			policy[i] = optimalAction
 		return policy
 
 	def getPolicy(self):
-		self.train()
-		policy = self.derivePolicy()
-		return policy
+		return 'Policy is \n', self.derivePolicy()

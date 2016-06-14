@@ -36,7 +36,7 @@ positionMatrix = [2, 1]					# Number of state setting
 epsilonGreedy = 0.1
 alpha = 0.1
 gamma = 0.7
-numEpisoids = 30
+numEpisoids = 100
 
 p = pseudoStateObserver(poppy, io, name, positionMatrix)
 a = actor(poppy, io, name, positionMatrix)
@@ -46,3 +46,4 @@ pro = problem(p,a,r,s)
 Sarsa0InVrep = SarsaZeroVrep(pro, epsilonGreedy, numEpisoids, alpha, gamma)
 
 Sarsa0InVrep.trainModel()
+print Sarsa0InVrep.getPolicy()
