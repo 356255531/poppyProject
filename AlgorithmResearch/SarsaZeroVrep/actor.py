@@ -4,6 +4,7 @@ from CodeFramwork.actorAb import actorAb
 import itertools
 import random as rd
 import time
+import numpy as np
 
 class actor(pseudoStateObserver, actorAb):
 	"""docstring for actor"""
@@ -21,16 +22,13 @@ class actor(pseudoStateObserver, actorAb):
 		if m != 0 and n != 0:
 			m = m / abs(m)
 			n = n / abs(n)
-			print 'action', (m, n)
 			self.poppy.head_z.goal_position = angleZ + 1.5 * motionUnit * m
 			self.poppy.head_y.goal_position = angleY + 1 * motionUnit * n
 		if m != 0 and n == 0:
 			m = m / abs(m)
-			print 'action', (m, n)
 			self.poppy.head_z.goal_position = angleZ + 1.5 * motionUnit * m
 		if m == 0 and n != 0:
 			n = n / abs(n)
-			print 'action', (m, n)
 			self.poppy.head_y.goal_position = angleY + 1 * motionUnit * n
 		time.sleep(0.04)			
 
@@ -38,36 +36,57 @@ class actor(pseudoStateObserver, actorAb):
 
 		if action == (0, 0):
 			return 'action illegal'
-		x, y = super(actor, self).getCurrentState()
+		currentState = super(actor, self).getCurrentState()
+		if len(list(currentState)) == 0:
+			return False
+
+		x, y = currentState
 		diffX, diffY = action
 		goalX, goalY = x + diffX, y + diffY
-		while x != goalX or y != goalY:
+		count = 0
+		while (x != goalX or y != goalY) and count < 20:
 			actionX = goalX - x
 			actionY = goalY - y
-			if abs(actionX) != 0:
-				motionUnit = (abs(actionX) * 1.5) // 5;
-			if abs(actionY) != 0:
-				if abs(actionY) // 5 < motionUnit:
-					print 'actionY', actionY
-					motionUnit = abs(actionY) // 5
-			if motionUnit < 1:
-				motionUnit = 1
-			print motionUnit
+			a = max((abs(actionX) * 1.5) // 5, 1)
+			b = max(abs(actionY) // 5, 1)
+			motionUnit = min(a, b)
 			self.motorControl((actionX, actionY), motionUnit)
-			x, y = super(actor, self).getCurrentState()
-			print 'current state', (x, y)
+
+			currentState = super(actor, self).getCurrentState()
+			if len(list(currentState)) == 0:
+				return False
+
+			x, y = currentState
+			count += 1
+		return True
 
 	def randMove(self, stateSpace):
-		goalState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
-		while goalState == (0, 0):
-			goalState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
-		while abs(list(goalState)[0]) == list(self.positionMatrix)[0] or abs(list(goalState)[1]) == list(self.positionMatrix)[1]:
-			goalState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
-		x, y = super(actor, self).getCurrentState()
-		goalX, goalY = goalState
-		diffX, diffY = int(goalX - x), int(goalY - y)
+		while len(list(super(actor, self).getCurrentState())) == 0:
+			list1 = np.arange(-self.positionMatrix[0], self.positionMatrix[0])
+			list2 = np.arange(-self.positionMatrix[1], self.positionMatrix[1])
+			motionSpace = [(i, j) for i, j in itertools.product(list1, list2)]
+			motionSpace.remove((0, 0))
+			self.takeAction(motionSpace[rd.randint(0, len(motionSpace) - 1)])
 
-		self.takeAction((diffX, diffY))
+
+		initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
+		while initialState == (0, 0):
+			initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
+
+		x, y = super(actor, self).getCurrentState()
+		initialX, initialY = initialState
+		diffX, diffY = int(initialX - x), int(initialY - y)
+
+
+		while not self.takeAction((diffX, diffY)):
+			initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
+			while initialState == (0, 0):
+				initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
+
+			x, y = super(actor, self).getCurrentState()
+			initialX, initialY = initialState
+			diffX, diffY = int(initialX - x), int(initialY - y)
+			self.takeAction((diffX, diffY))
 
 	def getActionSpace(self, stateSpace):
 		pass
@@ -100,6 +119,7 @@ if __name__ == '__main__':
 	c = pseudoStateObserver(poppy, io, name, positionMatrix)
 	print 'current State Before action', c.getCurrentState()
 
-	a.randMove(b.getStateSpace())
+	for i in xrange(100):
+		a.randMove(b.getStateSpace())
 
 	print 'next state after action', c.getCurrentState()

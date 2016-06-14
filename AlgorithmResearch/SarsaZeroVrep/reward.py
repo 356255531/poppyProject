@@ -21,7 +21,11 @@ class reward(rewardAb):
 					return -100
 			euclideanDis1 = list(currentState)[0] ** 2 + list(currentState)[1] ** 2
 			euclideanDis2 = list(nextState)[0] ** 2 + list(nextState)[1] ** 2
-			return np.sqrt(euclideanDis1) - np.sqrt(euclideanDis2)
+			absReward = np.sqrt(euclideanDis1) - np.sqrt(euclideanDis2)
+			if absReward > 0:
+				return absReward
+			else:
+				return 2 * absReward
 		else:
 			if len(list(currentState)) == 0:
 				if len(list(nextState)) != 0:

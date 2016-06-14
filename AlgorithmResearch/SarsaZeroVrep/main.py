@@ -32,11 +32,11 @@ io.set_object_position('cube', position=[0, -1, 1.05])	# Relocate the first obje
 ######################################################################
 
 ################################### Reinforcement Learning ###################################
-positionMatrix = [25, 20]					# Number of state setting
+positionMatrix = [2, 1]					# Number of state setting
 epsilonGreedy = 0.1
 alpha = 0.1
 gamma = 0.7
-numEpisoids = 100
+numEpisoids = 30
 
 p = pseudoStateObserver(poppy, io, name, positionMatrix)
 a = actor(poppy, io, name, positionMatrix)

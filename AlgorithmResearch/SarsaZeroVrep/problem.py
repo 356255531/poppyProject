@@ -10,6 +10,9 @@ class problem(object):
 		self.stateSpace = self.stateActionSpace.getStateSpace()
 		self.actionSpace = self.stateActionSpace.getActionSpace()
 
+	def getCurrentState(self):
+		return self.pseudoStateObserver.getCurrentState()
+
 	def initStateSpace(self):
 		pass
 
@@ -26,19 +29,21 @@ class problem(object):
 	def takeAction(self, currentState, action):
 		self.actor.takeAction(action)
 
-	def getSuccessor(self, currentState, action):
-		diffX, diffY = action
-		x, y = currentState
-		newX, newY = x + diffX, y + diffY
-		return (newX, newY)
+	def getReward(self, currentState, action, nextState):
+		return self.reward.getReward(currentState, action, nextState)
 
-		x, y = currentState
-		diffX, diffY = action
-		nextState = (x + diffX, y + diffY)
-		return reward.get_rewards(currentState, action, nextState)
+	# def getSuccessor(self, currentState, action):
+	# 	diffX, diffY = action
+	# 	x, y = currentState
+	# 	newX, newY = x + diffX, y + diffY
+	# 	return (newX, newY)
 
-	def getCurrentState(self):
-		return self.pseudoStateObserver.getCurrentState()
+	# 	x, y = currentState
+	# 	diffX, diffY = action
+	# 	nextState = (x + diffX, y + diffY)
+	# 	return reward.get_rewards(currentState, action, nextState)
+
+
 
 if __name__ == '__main__':
 	from poppy.creatures import PoppyTorso
