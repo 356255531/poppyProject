@@ -9,7 +9,7 @@ from Modules.actor import actor
 from reward import reward
 from Modules.problemPseudoCV import problemPseudoCV
 
-from SarsaZero import SarsaZero
+from sarsaZero import sarsaZero
 
 poppy = PoppyTorso(simulator='vrep')
 
@@ -43,7 +43,7 @@ a = actor(poppy, io, name, positionMatrix)
 r = reward()
 s = stateActionSpace(positionMatrix)
 pro = problemPseudoCV(p,a,r,s)
-Sarsa0InVrep = SarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
+Sarsa0InVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
 
 Sarsa0InVrep.trainModel()
 print Sarsa0InVrep.getPolicy()
