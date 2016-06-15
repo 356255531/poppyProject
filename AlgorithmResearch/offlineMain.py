@@ -24,8 +24,8 @@ r = reward()
 s = stateActionSpace(positionMatrix)
 pro = offlineProblem(r,s)
 
-# Sarsa0InVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
-Sarsa0InVrep = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount, delta)
+Sarsa0InVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
+# Sarsa0InVrep = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount, delta)
 
 Sarsa0InVrep.trainModel()
 print '\n\n\n\n\n\n'
