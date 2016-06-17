@@ -1,49 +1,71 @@
-from poppy.creatures import PoppyTorso
-import numpy as np
+__author__ = 'Zhiwei Han'
+
+""" This Script will run the predefined algorithms in Vrep.
+	When you want to run your  predefined RL algorithms, firstly set up a class with your predefined algorithm model.
+	E.g.  Sarsa0InVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma).
+	And then call the class methed trainModel() to train. (It may depends on how you design your RL algorithm module)
+	In this case sarsaZero is an algorithm module which was predefined under sarsaZero.py file.
+	"""
+from poppy.creatures import PoppyTorso			# Import the nessesary file for setting vrep
+
+import numpy as np 								# Import the required python libs
 import time
 import random as rd
 
-from Modules.stateActionSpace import stateActionSpace
+from Modules.stateActionSpace import stateActionSpace	# Import the modules required by RL algorithm
 from Modules.pseudoStateObserver import pseudoStateObserver 
 from Modules.actor import actor
 from reward import reward
 from Modules.problemPseudoCV import problemPseudoCV
 
-from sarsaZero import sarsaZero
+from sarsaZero import sarsaZero					# import the predefined RL algorithm
+from sarsaLambda import sarsaLambda
 
+################################### Initialize Vrep ###################################
 poppy = PoppyTorso(simulator='vrep')
 
 ################################### Object Interaction ###################################
-io = poppy._controllers[0].io 		# Object parameter setting
-name = 'cube'
-position = [0, -0.15, 0.85] 		# X, Y, Z
-sizes = [0.1, 0.1, 0.1] 			# in meters
-mass = 0 							# in kg
+io = poppy._controllers[0].io 					# Object controller setting
 
-io.add_cube(name, position, sizes, mass)	# Add object
+name1 = 'Support'								# Obeject parameters' setting
+position1 = [0, -1, 0.5]						# Position Coordinates
+size1 = [3, 0.3, 1]							# Size
+mass1 = 0										# Mass
+io.add_cube(name1, position1, size1, mass1)	# Add second object
+
 time.sleep(1)
 
-name1 = 'cube2'						# Second object parameter setting
-position1 = [0, -1, 0.5]
-sizes1 = [3, 0.3, 1]
-io.add_cube(name1, position1, sizes1, mass)	# Add second object
+name2 = 'cube'
+position2 = [0, -1, 1.05]
+size2 = [0.1, 0.1, 0.1]
+mass2 = 0
+io.add_cube(name2, position2, size2, mass2)
 
-io.set_object_position('cube', position=[0, -1, 1.05])	# Relocate the first object
-######################################################################
+################################### Reinforcement Learning Parameters Setting ###################################
+positionMatrix = [2, 1]			# Number of state setting
+epsilonGreedy = 0.1				# Epsilon used in epsilonGreedy method	
+alpha = 0.1						# Step Length
+gamma = 0.7						# Discount coefficient used in computation of TD error
+numEpisoids = 200				# Number of Episoids used in trainning
+lambdaDiscount = 0.9			# Lambda in SarsaLambda algorithm
+delta = 0.8						# Eligibility discount coefficient
 
-################################### Reinforcement Learning ###################################
-positionMatrix = [2, 1]					# Number of state setting
-epsilonGreedy = 0.1
-alpha = 0.1
-gamma = 0.7
-numEpisoids = 100
-
-p = pseudoStateObserver(poppy, io, name, positionMatrix)
-a = actor(poppy, io, name, positionMatrix)
+################################### Creating Objects Requried by RL Algorithm ###################################
+p = pseudoStateObserver(poppy, io, name2, positionMatrix)
+a = actor(poppy, io, name2, positionMatrix)
 r = reward()
 s = stateActionSpace(positionMatrix)
-pro = problemPseudoCV(p,a,r,s)
-Sarsa0InVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)
 
-Sarsa0InVrep.trainModel()
-print Sarsa0InVrep.getPolicy()
+pro = problemPseudoCV(p,a,r,s)					# Creating the Trainning World Object
+
+################################### Reinforcement Learning ###################################
+SarsaZeroVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
+sarsaLambdaVrep = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount, delta)
+
+# SarsaZeroVrep.trainModel()					# Train the model with specific algorithm
+sarsaLambdaVrep.trainModel()
+
+print '\n'
+print 'The policy is'
+print sarsaLambdaVrep.getPolicy()
+# print SarsaZeroVrep.getPolicy()				# Output the policy derived by Q-function
