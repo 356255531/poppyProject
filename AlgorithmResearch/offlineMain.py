@@ -4,14 +4,13 @@ __author__ = 'Zhiwei Han'
 	When you want to run your predefined RL algorithms, firstly set up a class with your predefined algorithm model.
 	E.g.  SarsaZeroDummy = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma).
 	And then call the class methed trainModel() to train. (It may depends on how you design your RL algorithm module)
-	In this case sarsaZero is an algorithm module which was predefined under sarsaZero.py file.
-	"""
+	In this case sarsaZero is an algorithm module which was predefined under sarsaZero.py file. """
 from Modules.stateActionSpace import stateActionSpace	# Import the modules required by RL algorithm
 from reward import reward
 
 from sarsaZero import sarsaZero							# import the predefined RL algorithm
 from sarsaLambda import sarsaLambda
-from Modules.offlineProblem import offlineProblem
+from Modules.problemDummy import problemDummy
 
 
 ################################### Reinforcement Learning Parameters Setting ###################################
@@ -26,7 +25,7 @@ delta = 0.8						# Eligibility discount coefficient
 ################################### Creating Objects Requried by RL Algorithm ###################################
 r = reward()
 s = stateActionSpace(positionMatrix)
-pro = offlineProblem(r,s)
+pro = problemDummy(r,s)
 
 ################################### Reinforcement Learning ###################################
 SarsaZeroDummy = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module

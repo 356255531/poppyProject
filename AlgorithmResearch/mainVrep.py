@@ -16,7 +16,7 @@ from Modules.stateActionSpace import stateActionSpace	# Import the modules requi
 from Modules.pseudoStateObserver import pseudoStateObserver 
 from Modules.actor import actor
 from reward import reward
-from Modules.problemPseudoCV import problemPseudoCV
+from Modules.problemVrep import problemVrep
 
 from sarsaZero import sarsaZero					# import the predefined RL algorithm
 from sarsaLambda import sarsaLambda
@@ -56,7 +56,7 @@ a = actor(poppy, io, name2, positionMatrix)
 r = reward()
 s = stateActionSpace(positionMatrix)
 
-pro = problemPseudoCV(p,a,r,s)					# Creating the Trainning World Object
+pro = problemVrep(p,a,r,s)					# Creating the Trainning World Object
 
 ################################### Reinforcement Learning ###################################
 SarsaZeroVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
