@@ -5,7 +5,7 @@ import random as rd
 import operator
 
 class sarsaZero(object):
-	"""docstring for SarsaZeroVrep"""
+	""" The Sarsa(0) algorithm dessign. """
 	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma):
 		self.epsilonGreedy = epsilonGreedy
 		self.numEpisoid = numEpisoid

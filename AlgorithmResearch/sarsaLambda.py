@@ -30,6 +30,7 @@ class sarsaLambda(object):
 		return qFunc
 
 	def initEligibility(self):
+		""" Initialize the eligibility memory """
 		eligibility = {}
 		for i in self.stateSpace:
 			eligibility[i] = {j:0 for j in self.actionSpace[i]}
@@ -48,8 +49,7 @@ class sarsaLambda(object):
 			return action
 
 	def updateQFunc(self, currentState, action, reward, nextState, nextAction):
-		""" Update the Q function with given current state and 
-				next state by weighted TD error """
+		""" Update the Q function with eligibility and weighted TD error """
 		if len(list(nextState)) != 0:
 			tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
 		else:
@@ -62,7 +62,7 @@ class sarsaLambda(object):
 		self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.alpha * tdError, 3)
 
 	def trainEpisoid(self):
-		""" Train the model with only one episoid and 
+		""" Train the model in only one episoid and 
 			use the predefined function update the Q
 			function in every step """
 		ifTerminal = lambda x: list(x)[0] == list(x)[1] == 0
@@ -103,6 +103,7 @@ class sarsaLambda(object):
 		return step, totalReward, visitedStates
 
 	def trainModel(self):
+		""" Train the whole model within the given episoids number """
 		for i in xrange(self.numEpisoid):
 			print 'Trace', i + 1, ':'
 			self.trainEpisoid()
