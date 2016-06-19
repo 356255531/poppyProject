@@ -20,7 +20,6 @@ alpha = 0.1						# Step Length
 gamma = 0.7						# Discount coefficient used in computation of TD error
 numEpisoids = 200				# Number of Episoids used in trainning
 lambdaDiscount = 0.9			# Lambda in SarsaLambda algorithm
-delta = 0.8						# Eligibility discount coefficient
 
 ################################### Creating Objects Requried by RL Algorithm ###################################
 r = reward()
@@ -29,7 +28,7 @@ pro = problemDummy(r,s)
 
 ################################### Reinforcement Learning ###################################
 SarsaZeroDummy = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
-sarsaLambdaDummy = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount, delta)
+sarsaLambdaDummy = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
 
 # SarsaZeroDummy.trainModel()					# Train the model with specific algorithm
 sarsaLambdaDummy.trainModel()
