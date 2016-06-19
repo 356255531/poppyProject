@@ -12,8 +12,3 @@ class actorAb(object):
     def takeAction(self, action):
         """Execute some code to actually do the abstract action 'action' """
         pass
-
-    @abstractmethod
-    def getActionSpace(self):
-    	"""Get the whole action space depends on each state"""
-    	pass

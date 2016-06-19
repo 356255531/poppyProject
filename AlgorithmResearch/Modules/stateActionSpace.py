@@ -5,7 +5,7 @@ import numpy as np
 import itertools
 
 class stateActionSpace(stateActionSpaceAb):
-	"""docstring for StateActionSpace"""
+	""" This class return the action and state space """
 	def __init__(self, positionMatrix):
 		super(stateActionSpace, self).__init__()
 		self.positionMatrix = positionMatrix
@@ -49,8 +49,10 @@ class stateActionSpace(stateActionSpaceAb):
 		return self.actionSpace
 
 	def getEligibleAction(self):
+		""" Not implemented """
 		pass
 
 if __name__ == '__main__':
 	a = stateActionSpace((25, 20))
-	print len(a.getStateSpace())
+	x = 10
+	x

@@ -1,21 +1,27 @@
 __author__ = 'Zhiwei Han'
-from pseudoStateObserver import pseudoStateObserver
-from CodeFramework.actorAb import actorAb
-import itertools
+
+import itertools					# Import the neccesary python libs
 import random as rd
 import time
 import numpy as np
 
+from pseudoStateObserver import pseudoStateObserver		# Import the required modules
+from CodeFramework.actorAb import actorAb
+
 class actor(pseudoStateObserver, actorAb):
-	"""docstring for actor"""
+	"""Agent in the trainning enviromtn"""
 	def __init__(self, poppy, io, name, positionMatrix):
 		super(actor, self).__init__(poppy, io, name, positionMatrix)
-		self.positionMatrix = positionMatrix
-		self.poppy = poppy
-		self.io = io
-		self.name = name
+		self.positionMatrix = positionMatrix	#  The state size (2 * positionMatrix[0] + 1) * (2 * positionMatrix[1] + 1)
+		self.poppy = poppy 			# The virtual poppy in Vrep
+		self.io = io 				# The object interacting interface in Vrep
+		self.name = name 			# The object name in Vrep
 
-	def motorControl(self, action, motionUnit):
+	def __motorControl(self, action, motionUnit):
+		""" Motor control interface and unexpected to be called outside the class 
+			action: Head moves left: (-1, 0), right:(0, 1), rightdown(1, -1) etc.
+			motionUnit: used to accelerate or slow down the movement
+			"""
 		m, n = action
 		angleY = self.poppy.head_y.present_position
 		angleZ = self.poppy.head_z.present_position
@@ -33,7 +39,9 @@ class actor(pseudoStateObserver, actorAb):
 		time.sleep(0.04)			
 
 	def takeAction(self, action):
-
+		""" Use closed loop control the agent move to the next corresponding state. 
+			The definition of action see in self.__motorControl.
+			When no obect in sight, return Flase. """
 		if action == (0, 0):
 			return 'action illegal'
 		currentState = super(actor, self).getCurrentState()
@@ -50,7 +58,7 @@ class actor(pseudoStateObserver, actorAb):
 			a = max((abs(actionX) * 1.5) // 5, 1)
 			b = max(abs(actionY) // 5, 1)
 			motionUnit = min(a, b)
-			self.motorControl((actionX, actionY), motionUnit)
+			self.__motorControl((actionX, actionY), motionUnit)
 
 			currentState = super(actor, self).getCurrentState()
 			if len(list(currentState)) == 0:
@@ -61,6 +69,7 @@ class actor(pseudoStateObserver, actorAb):
 		return True
 
 	def randMove(self, stateSpace):
+		""" Agent moves to a random state by being given state space """
 		while len(list(super(actor, self).getCurrentState())) == 0:
 			list1 = np.arange(-self.positionMatrix[0], self.positionMatrix[0])
 			list2 = np.arange(-self.positionMatrix[1], self.positionMatrix[1])
@@ -88,11 +97,9 @@ class actor(pseudoStateObserver, actorAb):
 			diffX, diffY = int(initialX - x), int(initialY - y)
 			self.takeAction((diffX, diffY))
 
-	def getActionSpace(self, stateSpace):
-		pass
-
 
 if __name__ == '__main__':
+	""" Only for testing and need not to be modified """
 	from poppy.creatures import PoppyTorso
 	import numpy as np
 	import time

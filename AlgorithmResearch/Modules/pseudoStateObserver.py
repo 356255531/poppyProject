@@ -2,16 +2,14 @@ from CodeFramework.stateObserverAb import stateObserverAb
 from pseudoCV import pseudoCV
 
 class pseudoStateObserver(stateObserverAb, pseudoCV):
-	"""docstring for pseudoStateObserver"""
+	""" Use pseudoCV algorithm to observe the agent current state"""
 	def __init__(self, poppy, io, name, positionMatrix):
 		pseudoCV.__init__(self, poppy, io, name, positionMatrix)
 		super(pseudoStateObserver, self).__init__()
 
 
 	def getCurrentState(self):
-		"""Method that extracts from somewhere which state it is.
-        :return current_state
-        """
+		""" Return the current state """
 		return super(pseudoStateObserver, self).getPosition()
 
 if __name__ == '__main__':

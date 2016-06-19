@@ -3,14 +3,16 @@ import numpy as np
 import math
 
 class pseudoCV():
-    """docstring for pseudoCV"""
+    """ This class returns the current positon of poppy in Vrep
+    within a math way """
     def __init__(self, poppy, io, name, positionMatrix):
         self.poppy = poppy
         self.io = io
         self.name = name
         self.positionMatrix = positionMatrix
         
-    def headForwardDirection(self):
+    def __headForwardDirection(self):
+        """ Return the vector of camera foward direction """
         angleNegativeY = self.poppy.head_z.present_position
         angleSurfaceXY = - self.poppy.head_y.present_position
 
@@ -24,7 +26,8 @@ class pseudoCV():
         forwardDire = [x, y, z]
         return forwardDire
 
-    def objectRelPosition(self):
+    def __objectRelPosition(self):
+        """ return the relativ positon(vector) of object to camera"""
         objectPos = self.io.get_object_position(self.name)
         positionCameraOri = [0, -0.05, 1.06] # Camera's position in Vrep
 
@@ -32,14 +35,16 @@ class pseudoCV():
 
         return objectRelPos
 
-    def canSeeJudge(self):
-        orthognalBasis1 = self.headForwardDirection()
+    def __canSeeJudge(self):
+        """ Judge if the object is in sight by calculating if
+            the object is out of perspective """
+        orthognalBasis1 = self.__headForwardDirection()
         orthognalBasis2 = [orthognalBasis1[1], -orthognalBasis1[0], 0]
         normOrthBasis2 = np.linalg.norm(orthognalBasis2)
         orthognalBasis2 =  [orthognalBasis2[i] / normOrthBasis2 for i in xrange(3) ]
         orthognalBasis3 = np.cross(orthognalBasis2, orthognalBasis1)
 
-        objectRelPos = self.objectRelPosition()
+        objectRelPos = self.__objectRelPosition()
         objectProjectionOnOrthBasis1 = np.dot(objectRelPos, orthognalBasis1)
         if objectProjectionOnOrthBasis1 < 0:
             return False
@@ -67,9 +72,10 @@ class pseudoCV():
             angle1 = -angle1
         return angle1, angle2
 
-    # Output the position of problem
     def getPosition(self):
-        angle = self.canSeeJudge()
+        """ Return the position of centorid in state matrix
+            if object out of perspective return () """
+        angle = self.__canSeeJudge()
         m, n = self.positionMatrix
         if not angle:
             return []
