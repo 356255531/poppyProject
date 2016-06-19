@@ -4,11 +4,14 @@ from Modules.CodeFramework.rewardAb import rewardAb
 import numpy as np
 
 class reward(rewardAb):
-	"""docstring for reward"""
+	""" The class gives the setting of reward """
 	def __init__(self):
 		super(reward, self).__init__()
 
 	def getReward(self, currentState, action, nextState, problemType='capture'):
+		"""This method give back the reward value according to given current
+			state, action, next state and if it's a greeting or avoiding case(optional).
+			By default is greeting. """
 		if len(list(currentState)) == 0 and len(list(nextState)) == 0:
 			return 0
 
