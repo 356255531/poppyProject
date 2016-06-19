@@ -6,13 +6,12 @@ import operator
 
 class sarsaLambda(object):
 	"""docstring for SarsaZeroVrep"""
-	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma, lambdaDiscount, delta):
+	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma, lambdaDiscount):
 		self.epsilonGreedy = epsilonGreedy
 		self.numEpisoid = numEpisoid
 		self.alpha = alpha
 		self.gamma = gamma
 		self.lambdaDiscount = lambdaDiscount
-		self.delta = delta
 
 		self.problem = problem
 
@@ -57,9 +56,9 @@ class sarsaLambda(object):
 		self.eligibility[currentState][action] += 1
 		for i in self.stateSpace:
 			for j in self.actionSpace:
-				self.qFunc[currentState][action] += self.alpha * self.delta * self.eligibility[currentState][action]
+				self.qFunc[currentState][action] += self.alpha * tdError * self.eligibility[currentState][action]
+				self.qFunc[currentState][action] = round(self.qFunc[currentState][action], 3)
 				self.eligibility[currentState][action] = self.gamma * self.lambdaDiscount * self.eligibility[currentState][action]
-		self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.alpha * tdError, 3)
 
 	def trainEpisoid(self):
 		""" Train the model in only one episoid and 
@@ -110,7 +109,7 @@ class sarsaLambda(object):
 			print 'Q Function'
 			for j in self.qFunc:
 				print j, ':', self.qFunc[j]
-			self.epsilonGreedy *= 0.99
+			self.epsilonGreedy = 1 - (1 - self.epsilonGreedy) * 0.99
 
 	def derivePolicy(self):
 		policy = {}

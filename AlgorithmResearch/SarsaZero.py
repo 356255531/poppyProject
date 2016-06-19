@@ -91,7 +91,7 @@ class sarsaZero(object):
 			print 'Q Function'
 			for j in self.qFunc:
 				print j, ':', self.qFunc[j]
-			self.epsilonGreedy *= 0.99
+			self.epsilonGreedy = 1 - (1 - self.epsilonGreedy) * 0.99
 
 	def derivePolicy(self):
 		policy = {}
