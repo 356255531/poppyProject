@@ -1,14 +1,14 @@
 __author__ = 'Zhiwei Han'
 
-from Modules.CodeFramework.rewardAb import rewardAb
+from Modules.CodeFramework.Reward import Reward
 import numpy as np
 
-class reward(rewardAb):
+class reward(Reward):
 	""" The class gives the setting of reward """
 	def __init__(self):
 		super(reward, self).__init__()
 
-	def getReward(self, currentState, action, nextState, problemType='capture'):
+	def get_reward(self, currentState, action, nextState=None, problemType='capture'):
 		"""This method give back the reward value according to given current
 			state, action, next state and if it's a greeting or avoiding case(optional).
 			By default is greeting. """
@@ -44,4 +44,4 @@ class reward(rewardAb):
 				return -round(absReward, 3) - 1
 if __name__ == '__main__':
 	a = reward()
-	print a.getReward((1, 2), (1, 0), (1, 1), 'capture')
+	print a.get_reward((1, 2), (1, 0), (1, 1), 'capture')
