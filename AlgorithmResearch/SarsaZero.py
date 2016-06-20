@@ -1,10 +1,12 @@
 __author__ = 'Zhiwei Han'
 
+from Modules.CodeFramework.LearningAlgorithm import LearningAlgorithm
+
 import numpy as np
 import random as rd
 import operator
 
-class sarsaZero(object):
+class sarsaZero(LearningAlgorithm):
 	""" The Sarsa(0) algorithm dessign. """
 	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma):
 		self.epsilonGreedy = epsilonGreedy
@@ -14,8 +16,8 @@ class sarsaZero(object):
 
 		self.problem = problem
 
-		self.stateSpace = self.problem.getStateSpace()  		# Initialize the state list
-		self.actionSpace = self.problem.getActionSpace()		# Initialize the action list
+		self.stateSpace = self.problem.get_list_of_states()  		# Initialize the state list
+		self.actionSpace = self.problem.get_list_of_actions()		# Initialize the action list
 		self.qFunc = self.initializeQFunc()						# Initialize the Q function
 
 	def initializeQFunc(self):
@@ -26,7 +28,7 @@ class sarsaZero(object):
 			qFunc[i] = {j:0 for j in self.actionSpace[i]}
 		return qFunc
 
-	def epsilonGreedySelection(self, currentState):
+	def get_next_action(self, currentState):
 		""" Pick the action from action space with given state by 
 			using epsilon greedy method """
 		if rd.random() > self.epsilonGreedy:
@@ -55,23 +57,23 @@ class sarsaZero(object):
 		ifTerminal = lambda x: list(x)[0] == list(x)[1] == 0
 
 		visitedStates = []
-		currentState = self.problem.getInitialState()
+		currentState = self.problem.get_initial_state()
 		visitedStates.append(currentState)
 		step = 0
 		totalReward = 0
 
-		action = self.epsilonGreedySelection(currentState)
+		action = self.get_next_action(currentState)
 		while len(list(currentState)) != 0 and not ifTerminal(currentState):  	# Check if the algorithm has reached the terminal
-			self.problem.takeAction(currentState, action)						# or the object is already out of sight 
-			nextState = self.problem.getCurrentState()
+			self.problem.perform_action(currentState, action)						# or the object is already out of sight 
+			nextState = self.problem.get_current_state()
 			visitedStates.append(nextState)
-			reward = self.problem.getReward(currentState, action, nextState)
+			reward = self.problem.get_reward(currentState, action, nextState)
 			totalReward += reward
 
 			if len(list(nextState)) == 0:										# If next state is out of sight then no further action can be taken
 				nextAction = ()
 			else:
-				nextAction = self.epsilonGreedySelection(nextState)
+				nextAction = self.get_next_action(nextState)
 
 			self.updateQFunc(currentState, action, reward, nextState, nextAction)	# Update Q function with the new knowledge of reward
 
@@ -102,3 +104,6 @@ class sarsaZero(object):
 
 	def getPolicy(self):
 		return  self.derivePolicy()
+
+	def receive_reward(self):
+		pass

@@ -3,23 +3,25 @@ __author__ = 'Zhiwei Han'
 import numpy as np
 import random as rd
 import operator
+import itertools
+from collections import deque
 
 class sarsaWithLinApxt(object):
 	"""docstring for SarsaZeroVrep"""
-	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma, lambdaDiscount, delta):
+	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma, lambdaDiscount):
 		self.epsilonGreedy = epsilonGreedy
 		self.numEpisoid = numEpisoid
 		self.alpha = alpha
 		self.gamma = gamma
 		self.lambdaDiscount = lambdaDiscount
-		self.delta = delta
 
 		self.problem = problem
 
-		self.stateSpace = self.problem.getStateSpace()  		# Initialize the state list
-		self.actionSpace = self.problem.getActionSpace()		# Initialize the action list
-		self.qFunc = self.initQFfunc()							# Initialize the Q function
-		self.eligibility = self.initEligibility()				# Initialize the Eligibility
+		self.stateSpace = self.problem.getStateSpace()  				# Initialize the state list
+		self.actionSpace = self.problem.getActionSpace()				# Initialize the action list
+		self.qFunc = self.initQFfunc()									# Initialize the Q function
+		self.featureTransitionDict, self.apxtParas= self.featureTransition()		# Initialize the features used in gradient descent
+		self.eligibility = self.initEligibility()						# Initialize the Eligibility
 
 	def initQFfunc(self):
 		""" Initialize the Q function 
@@ -30,10 +32,41 @@ class sarsaWithLinApxt(object):
 		return qFunc
 
 	def initEligibility(self):
-		eligibility = {}
-		for i in self.stateSpace:
-			eligibility[i] = {j:0 for j in self.actionSpace[i]}
-		return eligibility
+		return np.zeros(len(self.apxtParas))
+
+	def featureTransition(self):
+		""" Including feature set up and nomalization """
+		featureSet = set()
+
+		for state in self.stateSpace:
+			for action in self.actionSpace[state]:
+				i, j = state
+				euclideanDist1 = np.sqrt(i ** 2 + j ** 2)
+				x, y = action
+				euclideanDist2 = np.sqrt((i + x) ** 2 + (j + y) ** 2)				
+				featureSet.add((euclideanDist1, euclideanDist2))
+
+		featureSet = list(featureSet)
+
+		featureTransMatrix = {}
+		for state in self.stateSpace:
+			featureTransMatrix[state] = {}
+			for action in self.actionSpace[state]:
+				x, y = state 
+				i, j = action
+				euclideanDist1 = np.sqrt(x ** 2 + y ** 2)
+				euclideanDist2 = np.sqrt((i + x) ** 2 + (j + y) ** 2)	
+				element = (euclideanDist1, euclideanDist2)
+				featureTransMatrix[state][action] = featureSet.index(element)
+
+		for state in self.stateSpace:
+			for action in self.actionSpace[state]:
+				emptyArray = np.zeros(len(featureSet))
+				emptyArray[featureTransMatrix[state][action]] = 1
+				featureTransMatrix[state][action] = emptyArray
+
+		paras = [round(rd.random(), 3) for i in xrange(len(featureSet))]
+		return featureTransMatrix, np.array(paras)
 
 	def epsilonGreedySelection(self, currentState):
 		""" Pick the action from action space with given state by 
@@ -79,23 +112,28 @@ class sarsaWithLinApxt(object):
 
 		actions = self.actionSpace[currentState]
 		action = actions[rd.randint(0, len(actions) - 1)]
+		FA = self.featureTransMatrix[currentState][action]
 		while len(list(currentState)) != 0 and not ifTerminal(currentState):  	# Check if the algorithm has reached the terminal
+			i = list(FA == 1)
+			i = i.index(True)
+			self.eligibility[i] = 1		# Replacing traces
+
 			self.problem.takeAction(currentState, action)						# or the object is already out of sight 
 			nextState = self.problem.getCurrentState()
 			visitedStates.append(nextState)
 			reward = self.problem.getReward(currentState, action, nextState)
 			totalReward += reward
 
-			if len(list(nextState)) == 0:										# If next state is out of sight then no further action can be taken
-				nextAction = ()
-			else:
-				nextAction = self.epsilonGreedySelection(nextState)
-
-			self.updateQFunc(currentState, action, reward, nextState, nextAction)	# Update Q function with the new knowledge of reward
-
+			tdError = reward - FA * self.paras
 			currentState = nextState
+
+			if not ifTerminal(currentState):
+				if rd.random() < (1 - self.epsilonGreedy):
+					for i in self.actionSpace[currentState]:
+						Fa = 
+			self.apxtParas += self.alpha * tdError * self.eligibility
 			
-			action = nextAction
+			self.eligibility *= self.gamma * self.lambdaDiscount
 
 			step += 1
 		print visitedStates

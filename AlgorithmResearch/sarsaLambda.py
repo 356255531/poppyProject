@@ -15,8 +15,8 @@ class sarsaLambda(object):
 
 		self.problem = problem
 
-		self.stateSpace = self.problem.getStateSpace()  		# Initialize the state list
-		self.actionSpace = self.problem.getActionSpace()		# Initialize the action list
+		self.stateSpace = self.problem.get_list_of_states()  		# Initialize the state list
+		self.actionSpace = self.problem.get_list_of_actions()		# Initialize the action list
 		self.qFunc = self.initQFfunc()							# Initialize the Q function
 		self.eligibility = self.initEligibility()				# Initialize the Eligibility
 
@@ -53,7 +53,7 @@ class sarsaLambda(object):
 			tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
 		else:
 			tdError = reward + self.gamma * -100 - self.qFunc[currentState][action]
-		self.eligibility[currentState][action] += 1
+		self.eligibility[currentState][action] = 1
 		for i in self.stateSpace:
 			for j in self.actionSpace:
 				self.qFunc[currentState][action] += self.alpha * tdError * self.eligibility[currentState][action]
@@ -68,7 +68,7 @@ class sarsaLambda(object):
 
 		visitedStates = []
 
-		currentState = self.problem.getInitialState()
+		currentState = self.problem.get_initial_state()
 		visitedStates.append(currentState)
 
 		self.initEligibility()
@@ -79,10 +79,10 @@ class sarsaLambda(object):
 		actions = self.actionSpace[currentState]
 		action = actions[rd.randint(0, len(actions) - 1)]
 		while len(list(currentState)) != 0 and not ifTerminal(currentState):  	# Check if the algorithm has reached the terminal
-			self.problem.takeAction(currentState, action)						# or the object is already out of sight 
-			nextState = self.problem.getCurrentState()
+			self.problem.perform_action(currentState, action)						# or the object is already out of sight 
+			nextState = self.problem.get_current_state()
 			visitedStates.append(nextState)
-			reward = self.problem.getReward(currentState, action, nextState)
+			reward = self.problem.get_reward(currentState, action, nextState)
 			totalReward += reward
 
 			if len(list(nextState)) == 0:										# If next state is out of sight then no further action can be taken
