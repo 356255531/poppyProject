@@ -14,11 +14,11 @@ import random as rd
 
 from Modules.stateActionSpace import stateActionSpace	# Import the modules required by RL algorithm
 from Modules.pseudoStateObserver import pseudoStateObserver 
-from Modules.actor import actor
+from Modules.actorVrep import actorVrep
 from reward import reward
 from Modules.problemVrep import problemVrep
 
-from sarsaZero import sarsaZero					# import the predefined RL algorithm
+from sarsaZero import sarsaZero							# import the predefined RL algorithm
 from sarsaLambda import sarsaLambda
 
 ################################### Initialize Vrep ###################################
@@ -29,9 +29,9 @@ io = poppy._controllers[0].io 					# Object controller setting
 
 name1 = 'Support'								# Obeject parameters' setting
 position1 = [0, -1, 0.5]						# Position Coordinates
-size1 = [3, 0.3, 1]							# Size
+size1 = [3, 0.3, 1]								# Size
 mass1 = 0										# Mass
-io.add_cube(name1, position1, size1, mass1)	# Add second object
+io.add_cube(name1, position1, size1, mass1)		# Add second object
 
 time.sleep(1)
 
@@ -42,7 +42,7 @@ mass2 = 0
 io.add_cube(name2, position2, size2, mass2)
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-positionMatrix = [2, 1]			# Number of state setting
+positionMatrix = [4, 2]			# Number of state setting
 epsilonGreedy = 0.1				# Epsilon used in epsilonGreedy method	
 alpha = 0.1						# Step Length
 gamma = 0.7						# Discount coefficient used in computation of TD error
@@ -51,18 +51,18 @@ lambdaDiscount = 0.9			# Lambda in SarsaLambda algorithm
 
 ################################### Creating Objects Requried by RL Algorithm ###################################
 p = pseudoStateObserver(poppy, io, name2, positionMatrix)
-a = actor(poppy, io, name2, positionMatrix)
+a = actorVrep(poppy, io, name2, positionMatrix)
 r = reward()
 s = stateActionSpace(positionMatrix)
 
-pro = problemVrep(p,a,r,s)					# Creating the Trainning World Object
+pro = problemVrep(p,a,r,s)						# Creating the Trainning World Object
 
 ################################### Reinforcement Learning ###################################
 SarsaZeroVrep = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
 sarsaLambdaVrep = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
 
-# SarsaZeroVrep.trainModel()					# Train the model with specific algorithm
-sarsaLambdaVrep.trainModel()
+SarsaZeroVrep.trainModel()					# Train the model with specific algorithm
+# sarsaLambdaVrep.trainModel()
 
 print '\n'
 print 'The policy is'
