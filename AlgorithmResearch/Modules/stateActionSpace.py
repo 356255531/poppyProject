@@ -1,10 +1,10 @@
 __author__ = 'Zhiwei Han'
 
-from CodeFramework.stateActionSpaceAb import stateActionSpaceAb
+from CodeFramework.StateActionSpace import StateActionSpace
 import numpy as np
 import itertools
 
-class stateActionSpace(stateActionSpaceAb):
+class stateActionSpace(StateActionSpace):
 	""" This class return the action and state space """
 	def __init__(self, positionMatrix):
 		super(stateActionSpace, self).__init__()
@@ -40,19 +40,18 @@ class stateActionSpace(stateActionSpaceAb):
 
 		return stateSpace, actionSpace
 
-	def getStateSpace(self):
+	def get_list_of_states(self):
 		"""Returns a list of all states available"""
 		return self.stateSpace
 
-	def getActionSpace(self):
+	def get_list_of_actions(self):
 		"""Returns a list of all actions available"""
 		return self.actionSpace
 
-	def getEligibleAction(self):
+	def get_eligible_actions(self, state):
 		""" Not implemented """
 		pass
 
 if __name__ == '__main__':
 	a = stateActionSpace((25, 20))
-	x = 10
-	x
+	print a.get_list_of_actions()

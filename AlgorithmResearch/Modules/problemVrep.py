@@ -1,7 +1,11 @@
 __author__ = 'Zhiwei Han'
-from CodeFramework.trainningWorld import trainningWorld
+from CodeFramework.TrainningWorld import TrainningWorld
+from stateActionSpace import stateActionSpace	# Import the modules required by RL algorithm
+from pseudoStateObserver import pseudoStateObserver 
+from actor import actor
+from reward import reward
 
-class problemVrep(trainningWorld):
+class problemVrep(TrainningWorld):
 	""" A trainning world of agent and enviroment.
 		The main and only object interacts with learning algorithm
 		during learning. """
@@ -12,32 +16,29 @@ class problemVrep(trainningWorld):
 		self.reward = reward
 		self.stateActionSpace = stateActionSpace
 
-		self.stateSpace = self.stateActionSpace.getStateSpace()
-		self.actionSpace = self.stateActionSpace.getActionSpace()
+		self.stateSpace = self.stateActionSpace.get_list_of_states()
+		self.actionSpace = self.stateActionSpace.get_list_of_actions()
 		self.reward = reward
 
-	def getCurrentState(self):
+	def get_current_state(self):
 		""" Return the current state """
-		return self.pseudoStateObserver.getCurrentState()
+		return self.pseudoStateObserver.get_current_state()
 
-	def initStateSpace(self):
-		pass
-
-	def getInitialState(self):
+	def get_initial_state(self):
 		self.actor.randMove(self.stateSpace)
-		return self.pseudoStateObserver.getCurrentState()
+		return self.pseudoStateObserver.get_current_state()
 
-	def getStateSpace(self):
+	def get_list_of_states(self):
 		return self.stateSpace
 
-	def getActionSpace(self):
+	def get_list_of_actions(self):
 		return self.actionSpace
 
-	def takeAction(self, currentState, action):
-		self.actor.takeAction(action)
+	def perform_action(self, currentState, action):
+		self.actor.perform_action(action)
 
-	def getReward(self, currentState, action, nextState):
-		return self.reward.getReward(currentState, action, nextState)
+	def get_reward(self, currentState, action, nextState):
+		return self.reward.get_reward(currentState, action, nextState)
 
 	# def getSuccessor(self, currentState, action):
 	# 	diffX, diffY = action
@@ -52,37 +53,37 @@ class problemVrep(trainningWorld):
 
 
 
-# if __name__ == '__main__':
-# 	from poppy.creatures import PoppyTorso
-# 	import numpy as np
-# 	import time
-# 	import math
+if __name__ == '__main__':
+	from poppy.creatures import PoppyTorso
+	import numpy as np
+	import time
+	import math
 
-# 	from stateActionSpace import stateActionSpace
-# 	from pseudoStateObserver import pseudoStateObserver 
-# 	from actor import actor
-# 	from reward import reward
+	from stateActionSpace import stateActionSpace
+	from pseudoStateObserver import pseudoStateObserver 
+	from actor import actor
+	from reward import reward
 
-# 	poppy = PoppyTorso(simulator='vrep')
+	poppy = PoppyTorso(simulator='vrep')
 
-# 	io = poppy._controllers[0].io
-# 	name = 'cube'
-# 	position = [0, -0.15, 0.85] # X, Y, Z
-# 	sizes = [0.1, 0.1, 0.1] # in meters
-# 	mass = 0 # in kg
-# 	io.add_cube(name, position, sizes, mass)
-# 	time.sleep(1)
-# 	name1 = 'cube2'
-# 	position1 = [0, -1, 0.5]
-# 	sizes1 = [3, 1, 1]
-# 	io.add_cube(name1, position1, sizes1, mass)
-# 	io.set_object_position('cube', position=[0, -1, 1.05])
-# 	positionMatrix = [25, 20]
+	io = poppy._controllers[0].io
+	name = 'cube'
+	position = [0, -0.15, 0.85] # X, Y, Z
+	sizes = [0.1, 0.1, 0.1] # in meters
+	mass = 0 # in kg
+	io.add_cube(name, position, sizes, mass)
+	time.sleep(1)
+	name1 = 'cube2'
+	position1 = [0, -1, 0.5]
+	sizes1 = [3, 1, 1]
+	io.add_cube(name1, position1, sizes1, mass)
+	io.set_object_position('cube', position=[0, -1, 1.05])
+	positionMatrix = [25, 20]
 
-# 	p = pseudoStateObserver(poppy, io, name, positionMatrix)
-# 	a = actor(poppy, io, name, positionMatrix)
-# 	r = reward()
-# 	s = stateActionSpace(positionMatrix)
-# 	pro = problem(p,a,r,s)
+	p = pseudoStateObserver(poppy, io, name, positionMatrix)
+	a = actor(poppy, io, name, positionMatrix)
+	r = reward()
+	s = stateActionSpace(positionMatrix)
+	pro = problemVrep(p,a,r,s)
 
-# 	print pro.getInitialState()
+	print pro.get_initial_state()

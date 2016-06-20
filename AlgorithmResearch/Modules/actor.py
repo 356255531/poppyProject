@@ -6,9 +6,9 @@ import time
 import numpy as np
 
 from pseudoStateObserver import pseudoStateObserver		# Import the required modules
-from CodeFramework.actorAb import actorAb
+from CodeFramework.Actor import Actor
 
-class actor(pseudoStateObserver, actorAb):
+class actor(pseudoStateObserver, Actor):
 	"""Agent in the trainning enviromtn"""
 	def __init__(self, poppy, io, name, positionMatrix):
 		super(actor, self).__init__(poppy, io, name, positionMatrix)
@@ -38,13 +38,13 @@ class actor(pseudoStateObserver, actorAb):
 			self.poppy.head_y.goal_position = angleY + 1 * motionUnit * n
 		time.sleep(0.04)			
 
-	def takeAction(self, action):
+	def perform_action(self, action):
 		""" Use closed loop control the agent move to the next corresponding state. 
 			The definition of action see in self.__motorControl.
 			When no obect in sight, return Flase. """
 		if action == (0, 0):
 			return 'action illegal'
-		currentState = super(actor, self).getCurrentState()
+		currentState = super(actor, self).get_current_state()
 		if len(list(currentState)) == 0:
 			return False
 
@@ -60,7 +60,7 @@ class actor(pseudoStateObserver, actorAb):
 			motionUnit = min(a, b)
 			self.__motorControl((actionX, actionY), motionUnit)
 
-			currentState = super(actor, self).getCurrentState()
+			currentState = super(actor, self).get_current_state()
 			if len(list(currentState)) == 0:
 				return False
 
@@ -70,32 +70,32 @@ class actor(pseudoStateObserver, actorAb):
 
 	def randMove(self, stateSpace):
 		""" Agent moves to a random state by being given state space """
-		while len(list(super(actor, self).getCurrentState())) == 0:
+		while len(list(super(actor, self).get_current_state())) == 0:
 			list1 = np.arange(-self.positionMatrix[0], self.positionMatrix[0])
 			list2 = np.arange(-self.positionMatrix[1], self.positionMatrix[1])
 			motionSpace = [(i, j) for i, j in itertools.product(list1, list2)]
 			motionSpace.remove((0, 0))
-			self.takeAction(motionSpace[rd.randint(0, len(motionSpace) - 1)])
+			self.perform_action(motionSpace[rd.randint(0, len(motionSpace) - 1)])
 
 
 		initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
 		while initialState == (0, 0):
 			initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
 
-		x, y = super(actor, self).getCurrentState()
+		x, y = super(actor, self).get_current_state()
 		initialX, initialY = initialState
 		diffX, diffY = int(initialX - x), int(initialY - y)
 
 
-		while not self.takeAction((diffX, diffY)):
+		while not self.perform_action((diffX, diffY)):
 			initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
 			while initialState == (0, 0):
 				initialState = stateSpace[rd.randint(0, len(stateSpace) - 1)]
 
-			x, y = super(actor, self).getCurrentState()
+			x, y = super(actor, self).get_current_state()
 			initialX, initialY = initialState
 			diffX, diffY = int(initialX - x), int(initialY - y)
-			self.takeAction((diffX, diffY))
+			self.perform_action((diffX, diffY))
 
 
 if __name__ == '__main__':
@@ -124,9 +124,9 @@ if __name__ == '__main__':
 	a = actor(poppy, io, name, positionMatrix)
 	b = stateActionSpace(positionMatrix)
 	c = pseudoStateObserver(poppy, io, name, positionMatrix)
-	print 'current State Before action', c.getCurrentState()
+	print 'current State Before action', c.get_current_state()
 
 	for i in xrange(100):
 		a.randMove(b.getStateSpace())
 
-	print 'next state after action', c.getCurrentState()
+	print 'next state after action', c.get_current_state()
