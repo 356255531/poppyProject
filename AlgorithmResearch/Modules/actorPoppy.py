@@ -5,17 +5,20 @@ import random as rd
 import time
 import numpy as np
 
-from pseudoStateObserver import pseudoStateObserver		# Import the required modules
+from CVStateObserver import CVStateObserver		# Import the required modules
 from CodeFramework.Actor import Actor
 
-class actor(pseudoStateObserver, Actor):
+class actorPoppy(CVStateObserver, Actor):
 	"""Agent in the trainning enviromtn"""
-	def __init__(self, poppy, io, name, positionMatrix):
+	def __init__(self, poppy,positionMatrix):
 		super(actor, self).__init__(poppy, io, name, positionMatrix)
-		self.positionMatrix = positionMatrix	#  The state size (2 * positionMatrix[0] + 1) * (2 * positionMatrix[1] + 1)
-		self.poppy = poppy 			# The virtual poppy in Vrep
-		self.io = io 				# The object interacting interface in Vrep
-		self.name = name 			# The object name in Vrep
+		self.positionMatrix = positionMatrix		# The state size (2 * positionMatrix[0] + 1) * (2 * positionMatrix[1] + 1)
+		self.poppy = poppy 							# The virtual poppy in Vrep
+
+		ids = [36, 37]
+		speed = dict(zip(ids, itertools.repeat(50)))
+		self.poppy.enable_torque(ids)
+		self.poppy.set_moving_speed(speed)			# Motor speed setting
 
 	def __motorControl(self, action, motionUnit):
 		""" Motor control interface and unexpected to be called outside the class 
@@ -23,19 +26,23 @@ class actor(pseudoStateObserver, Actor):
 			motionUnit: used to accelerate or slow down the movement
 			"""
 		m, n = action
-		angleY = self.poppy.head_y.present_position
-		angleZ = self.poppy.head_z.present_position
+		angleY = self.poppy.get_present_position((37, ))[0]
+		angleZ = self.poppy.get_present_position((36, ))[0]
 		if m != 0 and n != 0:
 			m = m / abs(m)
 			n = n / abs(n)
-			self.poppy.head_z.goal_position = angleZ + 1.5 * motionUnit * m
-			self.poppy.head_y.goal_position = angleY + 1 * motionUnit * n
+			goalZ = angleZ + 1.5 * motionUnit * m
+			goalY = angleY + 1 * motionUnit * n
+			pos = dict(zip([36, 37], [goalZ, goalY]))
+			self.poppy.set_goal_position(pos)
 		if m != 0 and n == 0:
 			m = m / abs(m)
-			self.poppy.head_z.goal_position = angleZ + 1.5 * motionUnit * m
+			goalZ = angleZ + 1.5 * motionUnit * m
+			self.poppy.set_goal_position({36:goalZ})
 		if m == 0 and n != 0:
 			n = n / abs(n)
-			self.poppy.head_y.goal_position = angleY + 1 * motionUnit * n
+			goalY = angleY + 1 * motionUnit * n
+			self.poppy.set_goal_position({37:goalY})
 		time.sleep(0.04)			
 
 	def perform_action(self, action):
@@ -123,7 +130,7 @@ if __name__ == '__main__':
 
 	a = actor(poppy, io, name, positionMatrix)
 	b = stateActionSpace(positionMatrix)
-	c = pseudoStateObserver(poppy, io, name, positionMatrix)
+	c = CVStateObserver(poppy, io, name, positionMatrix)
 	print 'current State Before action', c.get_current_state()
 
 	for i in xrange(100):

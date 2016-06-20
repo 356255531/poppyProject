@@ -2,17 +2,17 @@ __author__ = 'Zhiwei Han'
 from CodeFramework.TrainningWorld import TrainningWorld
 from stateActionSpace import stateActionSpace	# Import the modules required by RL algorithm
 from pseudoStateObserver import pseudoStateObserver 
-from actor import actor
+from actorVrep import actorVrep
 from reward import reward
 
 class problemVrep(TrainningWorld):
 	""" A trainning world of agent and enviroment.
 		The main and only object interacts with learning algorithm
 		during learning. """
-	def __init__(self, pseudoStateObserver, actor, reward, stateActionSpace):
+	def __init__(self, pseudoStateObserver, actorVrep, reward, stateActionSpace):
 		super(problemVrep, self).__init__()
 		self.pseudoStateObserver = pseudoStateObserver
-		self.actor = actor
+		self.actorVrep = actorVrep
 		self.reward = reward
 		self.stateActionSpace = stateActionSpace
 
@@ -25,7 +25,7 @@ class problemVrep(TrainningWorld):
 		return self.pseudoStateObserver.get_current_state()
 
 	def get_initial_state(self):
-		self.actor.randMove(self.stateSpace)
+		self.actorVrep.randMove(self.stateSpace)
 		return self.pseudoStateObserver.get_current_state()
 
 	def get_list_of_states(self):
@@ -35,7 +35,7 @@ class problemVrep(TrainningWorld):
 		return self.actionSpace
 
 	def perform_action(self, currentState, action):
-		self.actor.perform_action(action)
+		self.actorVrep.perform_action(action)
 
 	def get_reward(self, currentState, action, nextState):
 		return self.reward.get_reward(currentState, action, nextState)
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
 	from stateActionSpace import stateActionSpace
 	from pseudoStateObserver import pseudoStateObserver 
-	from actor import actor
+	from actorVrep import actorVrep
 	from reward import reward
 
 	poppy = PoppyTorso(simulator='vrep')
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 	positionMatrix = [25, 20]
 
 	p = pseudoStateObserver(poppy, io, name, positionMatrix)
-	a = actor(poppy, io, name, positionMatrix)
+	a = actorVrep(poppy, io, name, positionMatrix)
 	r = reward()
 	s = stateActionSpace(positionMatrix)
 	pro = problemVrep(p,a,r,s)

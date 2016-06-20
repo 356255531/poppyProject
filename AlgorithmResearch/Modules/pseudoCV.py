@@ -2,7 +2,7 @@ __author__ = 'Zhiwei Han'
 import numpy as np
 import math
 
-class pseudoCV():
+class pseudoCV(object):
     """ This class returns the current positon of poppy in Vrep
     within a math way """
     def __init__(self, poppy, io, name, positionMatrix):
