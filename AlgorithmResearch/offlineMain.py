@@ -10,6 +10,8 @@ from reward import reward
 
 from sarsaZero import sarsaZero							# import the predefined RL algorithm
 from sarsaLambda import sarsaLambda
+# from sarsaWithLinApxt import sarsaWithLinApxt
+
 from Modules.problemDummy import problemDummy
 
 
@@ -26,14 +28,18 @@ r = reward()
 s = stateActionSpace(positionMatrix)
 pro = problemDummy(r,s)
 
-################################### Reinforcement Learning ###################################
-SarsaZeroDummy = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
+# ################################### Reinforcement Learning ###################################
+sarsaZeroDummy = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
 sarsaLambdaDummy = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
+# sarsaWithLinApxtDummy = sarsaWithLinApxt(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
 
-# SarsaZeroDummy.trainModel()					# Train the model with specific algorithm
-sarsaLambdaDummy.trainModel()
+
+sarsaZeroDummy.trainModel()					# Train the model with specific algorithm
+# sarsaLambdaDummy.trainModel()
+# sarsaWithLinApxtDummy.trainModel()
+
 
 print '\n'
 print 'The policy is'
-print sarsaLambdaDummy.getPolicy()
-# print SarsaZeroDummy.getPolicy()				# Output the policy derived by Q-function
+# print sarsaLambdaDummy.getPolicy()
+print sarsaZeroDummy.getPolicy()				# Output the policy derived by Q-function
