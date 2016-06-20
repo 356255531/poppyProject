@@ -26,6 +26,9 @@ class actorPoppy(CVStateObserver, Actor):
 			motionUnit: used to accelerate or slow down the movement
 			"""
 		m, n = action
+		if m == 0 and n == 0:
+			return False
+
 		angleY = self.poppy.get_present_position((37, ))[0]
 		angleZ = self.poppy.get_present_position((36, ))[0]
 		if m != 0 and n != 0:
@@ -56,7 +59,10 @@ class actorPoppy(CVStateObserver, Actor):
 			return False
 
 		x, y = currentState
+
 		diffX, diffY = action
+		diffX, diffY = abs(diffX) / diffX, abs(diffY) / diffY
+
 		goalX, goalY = x + diffX, y + diffY
 		count = 0
 		while (x != goalX or y != goalY) and count < 20:
@@ -78,9 +84,7 @@ class actorPoppy(CVStateObserver, Actor):
 	def randMove(self, stateSpace):
 		""" Agent moves to a random state by being given state space """
 		while len(list(super(actor, self).get_current_state())) == 0:
-			list1 = np.arange(-self.positionMatrix[0], self.positionMatrix[0])
-			list2 = np.arange(-self.positionMatrix[1], self.positionMatrix[1])
-			motionSpace = [(i, j) for i, j in itertools.product(list1, list2)]
+			motionSpace = [(i, j) for i, j in itertools.product([-1, 0, 1]], repeat=2)]
 			motionSpace.remove((0, 0))
 			self.perform_action(motionSpace[rd.randint(0, len(motionSpace) - 1)])
 
