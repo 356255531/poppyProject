@@ -2,6 +2,7 @@ __author__ = 'erik'
 
 from abc import ABCMeta, abstractmethod
 
+
 class LearningAlgorithm(object):
     """Implementation class of the Learning Algorithm"""
 
@@ -17,4 +18,8 @@ class LearningAlgorithm(object):
     @abstractmethod
     def receive_reward(self, old_state, action, next_state, reward):
         """Perform things according to which reward was given"""
+        pass
+
+    def finalise_episode(self):
+        """Do things that need to be done when an episode was finished"""
         pass

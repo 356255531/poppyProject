@@ -11,3 +11,7 @@ class StateObserver(object):
         :return current_state
         """
         pass
+
+    def is_terminal_state(self, state):
+        """Check if current state is terminal"""
+        return False

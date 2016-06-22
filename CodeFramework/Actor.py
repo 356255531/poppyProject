@@ -12,3 +12,9 @@ class Actor(object):
     def perform_action(self, action):
         """Execute some code to actually do the abstract action 'action' """
         pass
+
+    def initialise_episode(self):
+        """ Do initial stuff before episode starts
+        """
+        pass
+    

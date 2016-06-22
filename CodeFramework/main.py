@@ -24,6 +24,27 @@ def run_learning(actor, learning_algorithm, reward, state_observer):
         learning_algorithm.receive_reward(current_state, next_action, next_state, reward_given)
         current_state = next_state
 
+def run_episode(actor, learning_algorithm, reward, state_observer, max_num_iterations = 1000000):
+    assert (isinstance(actor, Actor))
+    assert (isinstance(learning_algorithm, LearningAlgorithm))
+    assert (isinstance(reward, Reward))
+    assert (isinstance(state_observer, StateObserver))
+
+    actor.initialise_episode()
+    current_state = state_observer.get_current_state()
+    current_iter = 0
+    while (not state_observer.is_terminal_state(current_state)) and current_iter < max_num_iterations:
+        next_action = learning_algorithm.get_next_action(current_state)
+        actor.perform_action(next_action)
+        next_state = state_observer.get_current_state()
+        reward_given = reward.get_rewards(current_state, next_action, next_state)
+        learning_algorithm.receive_reward(current_state, next_action, next_state, reward_given)
+
+        current_state = next_state
+        current_iter += 1
+
+    learning_algorithm.
+
 if __name__ == '__main__':
     from dummy_classes import *
 
