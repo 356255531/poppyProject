@@ -17,10 +17,12 @@ class sarsaWithLinApxt(object):
 
 		self.problem = problem
 
-		self.stateSpace = self.problem.getStateSpace()  				# Initialize the state list
-		self.actionSpace = self.problem.getActionSpace()				# Initialize the action list
+		self.stateSpace = self.problem.get_list_of_states()  				# Initialize the state list
+		self.actionSpace = self.problem.get_list_of_actions()				# Initialize the action list
 		self.qFunc = self.initQFfunc()									# Initialize the Q function
-		self.featureTransitionDict, self.apxtParas= self.featureTransition()		# Initialize the features used in gradient descent
+
+		self.featureTransitionDict = self.featureTransition()			# Initialize the features used in gradient descent
+		self.apxtParas = self.initApxtParas()		
 		self.eligibility = self.initEligibility()						# Initialize the Eligibility
 
 	def initQFfunc(self):
@@ -34,44 +36,42 @@ class sarsaWithLinApxt(object):
 	def initEligibility(self):
 		return np.zeros(len(self.apxtParas))
 
+	def initApxtParas(self):
+		featuresState = list(self.featureTransitionDict.items())[0]
+		featuresStateAction = list(featuresState)[1]
+		values = featuresStateAction.values()
+		numFeatures = len(values[0])
+		return np.zeros(numFeatures)
+
 	def featureTransition(self):
 		""" Including feature set up and nomalization """
-		featureSet = set()
+		euclideanDistSet = set()
+		for i in self.stateSpace:
+			x, y = i
+			if x >= 0 and y >= 0:
+				euclideanDistSet.add(np.sqrt(x ** 2 + y ** 2))
+		euclideanDistSet = list(euclideanDistSet)
 
-		for state in self.stateSpace:
-			for action in self.actionSpace[state]:
-				i, j = state
-				euclideanDist1 = np.sqrt(i ** 2 + j ** 2)
-				x, y = action
-				euclideanDist2 = np.sqrt((i + x) ** 2 + (j + y) ** 2)				
-				featureSet.add((euclideanDist1, euclideanDist2))
-
-		featureSet = list(featureSet)
-
-		featureTransMatrix = {}
-		for state in self.stateSpace:
-			featureTransMatrix[state] = {}
-			for action in self.actionSpace[state]:
-				x, y = state 
-				i, j = action
+		featureTransitionDict = {}
+		for i in self.stateSpace:
+			featureTransitionDict[i] = {}
+			for j in self.actionSpace[i]:
+				array = np.zeros(2 * len(euclideanDistSet))
+				x, y = i
+				diffX, diffY = j
+				goalX, goalY = x + diffX, y + diffY
 				euclideanDist1 = np.sqrt(x ** 2 + y ** 2)
-				euclideanDist2 = np.sqrt((i + x) ** 2 + (j + y) ** 2)	
-				element = (euclideanDist1, euclideanDist2)
-				featureTransMatrix[state][action] = featureSet.index(element)
+				euclideanDist2 = np.sqrt(goalX ** 2 + goalY ** 2)
+				array[euclideanDistSet.index(euclideanDist1)] = 1
+				array[len(euclideanDistSet) + euclideanDistSet.index(euclideanDist2)] = 1
+				featureTransitionDict[i][j] = array
 
-		for state in self.stateSpace:
-			for action in self.actionSpace[state]:
-				emptyArray = np.zeros(len(featureSet))
-				emptyArray[featureTransMatrix[state][action]] = 1
-				featureTransMatrix[state][action] = emptyArray
+		return featureTransitionDict
 
-		paras = [round(rd.random(), 3) for i in xrange(len(featureSet))]
-		return featureTransMatrix, np.array(paras)
-
-	def epsilonGreedySelection(self, currentState):
+	def get_next_action(self, currentState):
 		""" Pick the action from action space with given state by 
 			using epsilon greedy method """
-		if rd.random() > self.epsilonGreedy:
+		if rd.random() < self.epsilonGreedy:
 			actions = list(self.actionSpace[currentState])
 			action = actions[rd.randint(0, len(actions) - 1)]
 			return action
@@ -80,19 +80,12 @@ class sarsaWithLinApxt(object):
 			action = max(actions.iteritems(), key=operator.itemgetter(1))[0]
 			return action
 
-	def updateQFunc(self, currentState, action, reward, nextState, nextAction):
+	def updateQFunc(self):
 		""" Update the Q function with given current state and 
 				next state by weighted TD error """
-		if len(list(nextState)) != 0:
-			tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
-		else:
-			tdError = reward + self.gamma * -100 - self.qFunc[currentState][action]
-		self.eligibility[currentState][action] += 1
 		for i in self.stateSpace:
-			for j in self.actionSpace:
-				self.qFunc[currentState][action] += self.alpha * self.delta * self.eligibility[currentState][action]
-				self.eligibility[currentState][action] = self.gamma * self.lambdaDiscount * self.eligibility[currentState][action]
-		self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.alpha * tdError, 3)
+			for j in self.actionSpace[i]:
+				self.qFunc[i][j] = round(sum(self.featureTransitionDict[i][j] * self.apxtParas), 3)
 
 	def trainEpisoid(self):
 		""" Train the model with only one episoid and 
@@ -102,7 +95,7 @@ class sarsaWithLinApxt(object):
 
 		visitedStates = []
 
-		currentState = self.problem.getInitialState()
+		currentState = self.problem.get_initial_state()
 		visitedStates.append(currentState)
 
 		self.initEligibility()
@@ -112,25 +105,38 @@ class sarsaWithLinApxt(object):
 
 		actions = self.actionSpace[currentState]
 		action = actions[rd.randint(0, len(actions) - 1)]
-		FA = self.featureTransMatrix[currentState][action]
+		FA = self.featureTransitionDict[currentState][action]
 		while len(list(currentState)) != 0 and not ifTerminal(currentState):  	# Check if the algorithm has reached the terminal
-			i = list(FA == 1)
-			i = i.index(True)
-			self.eligibility[i] = 1		# Replacing traces
+			index = [i for i, e in enumerate(FA) if e != 0]
+			for i in index:
+				self.eligibility[i] = 1
 
-			self.problem.takeAction(currentState, action)						# or the object is already out of sight 
-			nextState = self.problem.getCurrentState()
+			self.problem.perform_action(currentState, action)						# or the object is already out of sight 
+			nextState = self.problem.get_current_state()
 			visitedStates.append(nextState)
-			reward = self.problem.getReward(currentState, action, nextState)
+			reward = self.problem.get_reward(currentState, action, nextState)
 			totalReward += reward
 
-			tdError = reward - FA * self.paras
+			tdError = reward - sum(FA * self.apxtParas)
 			currentState = nextState
 
-			if not ifTerminal(currentState):
-				if rd.random() < (1 - self.epsilonGreedy):
-					for i in self.actionSpace[currentState]:
-						Fa = 
+			if len(list(currentState)) != 0:
+				if not ifTerminal(currentState):
+					if rd.random() < (1 - self.epsilonGreedy):
+						MaxQFunc = 0
+						for i in self.actionSpace[currentState]:
+							Fa = self.featureTransitionDict[currentState][i]
+							estimatedQ = sum(Fa * self.apxtParas)
+							if estimatedQ > MaxQFunc:
+								MaxQFunc = estimatedQ
+								action = i
+					else:
+						actions = self.actionSpace[currentState]
+						action = actions[rd.randint(0, len(actions) - 1)]
+						FA = self.featureTransitionDict[currentState][action]
+						estimatedQ = self.apxtParas * FA
+					tdError += self.gamma * estimatedQ
+
 			self.apxtParas += self.alpha * tdError * self.eligibility
 			
 			self.eligibility *= self.gamma * self.lambdaDiscount
@@ -141,13 +147,19 @@ class sarsaWithLinApxt(object):
 		return step, totalReward, visitedStates
 
 	def trainModel(self):
+		self.initQFfunc()
+		self.initApxtParas()
 		for i in xrange(self.numEpisoid):
 			print 'Trace', i + 1, ':'
 			self.trainEpisoid()
+			self.updateQFunc()
 			print 'Q Function'
 			for j in self.qFunc:
 				print j, ':', self.qFunc[j]
-			self.epsilonGreedy = 1 - (1 - self.epsilonGreedy) * 0.99
+			# print 'paras'
+			# print self.apxtParas
+
+			self.epsilonGreedy *= 0.99
 
 	def derivePolicy(self):
 		policy = {}
