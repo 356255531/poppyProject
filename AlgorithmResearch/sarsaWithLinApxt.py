@@ -11,19 +11,19 @@ class sarsaWithLinApxt(object):
 	def __init__(self, problem, epsilonGreedy, numEpisoid, alpha, gamma, lambdaDiscount):
 		self.epsilonGreedy = epsilonGreedy
 		self.numEpisoid = numEpisoid
-		self.alpha = alpha
-		self.gamma = gamma
-		self.lambdaDiscount = lambdaDiscount
+		self.alpha = alpha											# Update step length
+		self.gamma = gamma											# Discount coefficient
+		self.lambdaDiscount = lambdaDiscount						# Lambda discount coefficient
 
 		self.problem = problem
 
-		self.stateSpace = self.problem.get_list_of_states()  				# Initialize the state list
-		self.actionSpace = self.problem.get_list_of_actions()				# Initialize the action list
-		self.qFunc = self.initQFfunc()									# Initialize the Q function
+		self.stateSpace = self.problem.get_list_of_states()  		# Initialize the state list
+		self.actionSpace = self.problem.get_list_of_actions()		# Initialize the action list
+		self.qFunc = self.initQFfunc()								# Initialize the Q function
 
-		self.featureTransitionDict = self.featureTransition()			# Initialize the features used in gradient descent
-		self.apxtParas = self.initApxtParas()		
-		self.eligibility = self.initEligibility()						# Initialize the Eligibility
+		self.featureTransitionDict = self.featureTransition()		# Initialize the features lookup table by given state and action
+		self.apxtParas = self.initApxtParas()						# Parameters
+		self.eligibility = self.initEligibility()					# Initialize the Eligibility with all zero
 
 	def initQFfunc(self):
 		""" Initialize the Q function 
@@ -34,9 +34,11 @@ class sarsaWithLinApxt(object):
 		return qFunc
 
 	def initEligibility(self):
-		return np.zeros(len(self.apxtParas))
+		""" Initialize the Eligibility with all zero """
+		return np.zeros(len(self.apxtParas))						
 
 	def initApxtParas(self):
+		""" Initialize the Parameters used in linear approximation """
 		featuresState = list(self.featureTransitionDict.items())[0]
 		featuresStateAction = list(featuresState)[1]
 		values = featuresStateAction.values()
@@ -44,7 +46,7 @@ class sarsaWithLinApxt(object):
 		return np.zeros(numFeatures)
 
 	def featureTransition(self):
-		""" Including feature set up and nomalization """
+		""" Initialize the features lookup table """
 		euclideanDistSet = set()
 		for i in self.stateSpace:
 			x, y = i
@@ -81,16 +83,13 @@ class sarsaWithLinApxt(object):
 			return action
 
 	def updateQFunc(self):
-		""" Update the Q function with given current state and 
-				next state by weighted TD error """
+		""" Update the Q function with the features and linear parameters """
 		for i in self.stateSpace:
 			for j in self.actionSpace[i]:
 				self.qFunc[i][j] = round(sum(self.featureTransitionDict[i][j] * self.apxtParas), 3)
 
 	def trainEpisoid(self):
-		""" Train the model with only one episoid and 
-			use the predefined function update the Q
-			function in every step """
+		""" Train the model with only one episoid """
 		ifTerminal = lambda x: list(x)[0] == list(x)[1] == 0
 
 		visitedStates = []
@@ -147,6 +146,7 @@ class sarsaWithLinApxt(object):
 		return step, totalReward, visitedStates
 
 	def trainModel(self):
+		""" Train the whole model with given episoid number """
 		self.initQFfunc()
 		self.initApxtParas()
 		for i in xrange(self.numEpisoid):
@@ -156,9 +156,6 @@ class sarsaWithLinApxt(object):
 			print 'Q Function'
 			for j in self.qFunc:
 				print j, ':', self.qFunc[j]
-			# print 'paras'
-			# print self.apxtParas
-
 			self.epsilonGreedy *= 0.99
 
 	def derivePolicy(self):
