@@ -4,6 +4,8 @@ import cv2
 # Image Acquisition Algorithm running on 26.05.2016
 # REFERENCE:
 
+
+
 cap = cv2.VideoCapture(1)
 return_value, image = cap.read()
 #cv2.imshow( "image", image )
@@ -43,6 +45,15 @@ for cnt in contours:
     cv2.ellipse(roi, ellipse, (0, 255, 0), 2)
     box = cv2.boxPoints(ellipse)
     print (box)
+
+    get_length = lambda p1, p2: np.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1]) ** 2)
+
+    axis1 = get_length(box[0],box[1])
+    axis2 = get_length(box[1],box[2])
+
+    ratio = axis1/axis2
+    print (ratio)
+
     box_center = np.mean(box, axis=0)
     cv2.drawContours(roi, [np.int0([box_center, box_center, box_center, box_center])], 0, (255, 0, 0), 7)
 # cv2.imshow("Morphological Closing", closing)
