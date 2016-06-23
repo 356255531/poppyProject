@@ -10,8 +10,8 @@ from StateObserver import StateObserver
 class DummyStateActionSpace(StateActionSpace):
 
     def __init__(self):
-        self.states = [0, 1]
-        self.actions = [2, 4]
+        self.states = [0, 1, 2, 3]
+        self.actions = [7, 4]
 
     def get_list_of_states(self):
         return self.states
@@ -73,9 +73,12 @@ class DummyLearner(LearningAlgorithm):
         self.states = state_action_space.get_list_of_states()
         self.actions = state_action_space.get_list_of_actions()
 
-        self.values = [0 for x in self.actions]
+        self.values = [0 for x in self.states]
         self.gamma = 0.5
         self.learning_rate = 0.1
+
+        #random initialisation
+        self.policy = [self.actions[i % len(self.actions)] for i in len(self.states)]
 
     def get_next_action(self, current_state):
         return self.state_action_space.get_eligible_actions(current_state)[0]
@@ -88,3 +91,11 @@ class DummyLearner(LearningAlgorithm):
         td_error = reward + self.gamma*self.values[next_state_index] - self.values[old_state_index]
 
         self.values[old_state_index] += self.learning_rate * td_error
+
+    def finalise_episode(self):
+        """
+        Update policy greedily, in the dummy example assuming equal transition probabilities
+        """
+
+
+
