@@ -43,7 +43,7 @@ def run_episode(actor, learning_algorithm, reward, state_observer, max_num_itera
         current_state = next_state
         current_iter += 1
 
-    learning_algorithm.
+    learning_algorithm.finalise_episode()
 
 if __name__ == '__main__':
     from dummy_classes import *
