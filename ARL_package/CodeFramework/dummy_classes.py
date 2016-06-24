@@ -58,8 +58,8 @@ class DummyReward(Reward):
         self.actions = state_action_space.get_list_of_actions()
 
     def get_rewards(self, state, action, next_state, next_action=None):
-        if action == self.actions[0]:
-            return 1
+        if next_state == (0, 0):
+            return 1000
         else:
             return 0
 
@@ -73,29 +73,45 @@ class DummyLearner(LearningAlgorithm):
         self.states = state_action_space.get_list_of_states()
         self.actions = state_action_space.get_list_of_actions()
 
-        self.values = [0 for x in self.states]
         self.gamma = 0.5
         self.learning_rate = 0.1
 
         #random initialisation
-        self.policy = [self.actions[i % len(self.actions)] for i in len(self.states)]
+        self.values = dict()
+        self.policy = dict()
+        for i, state in enumerate(self.states):
+            self.values[state] = 0
+            eligible_actions = self.state_action_space.get_eligible_actions(state)
+            self.policy[state] = eligible_actions[i % len(eligible_actions)]
+        print self.values
 
     def get_next_action(self, current_state):
-        return self.state_action_space.get_eligible_actions(current_state)[0]
+        return self.policy[current_state]
 
     def receive_reward(self, old_state, action, next_state, reward):
         """Do TD return"""
-        old_state_index = self.states.index(old_state)
-        next_state_index = self.states.index(next_state)
 
-        td_error = reward + self.gamma*self.values[next_state_index] - self.values[old_state_index]
+        td_error = reward + self.gamma*self.values[next_state] - self.values[old_state]
 
-        self.values[old_state_index] += self.learning_rate * td_error
+        self.values[old_state] += self.learning_rate * td_error
 
     def finalise_episode(self):
         """
         Update policy greedily, in the dummy example assuming equal transition probabilities
         """
+        next_state_deterministic = \
+            lambda current_state, action: (current_state[0] + action[0], current_state[1] + action[1])
 
+        for state in self.policy.keys():
+            current_next_value = self.values[next_state_deterministic(state, self.policy[state])]
 
+            # find best action
+            for action in self.state_action_space.get_eligible_actions(state):
+                value_of_next = self.values[next_state_deterministic(state, action)]
+                if value_of_next >= current_next_value:
+                    self.policy[state] = action
+                    current_next_value = value_of_next
+
+        print "DummyLearner: Episode ended, policy updated. Current policy: " + str(self.policy)
+        print "DummyLearner: Current values: " + str(self.values)
 

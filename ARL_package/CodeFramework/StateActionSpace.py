@@ -30,3 +30,12 @@ class StateActionSpace(object):
         :return: is_terminal: boolean
         """
         return bool(state)
+
+
+    def get_terminal_state(self):
+        """
+        Gets the representation of the terminal state
+
+        :return: terminal state
+        """
+        return []
