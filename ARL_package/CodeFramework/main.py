@@ -21,6 +21,7 @@ def run_learning(actor, learning_algorithm, reward, state_observer):
         learning_algorithm.receive_reward(current_state, next_action, next_state, reward_given)
         current_state = next_state
 
+
 def run_episode(actor, learning_algorithm, reward, state_observer, state_action_space, max_num_iterations = 1000000):
     assert (isinstance(actor, Actor))
     assert (isinstance(learning_algorithm, LearningAlgorithm))
@@ -41,8 +42,8 @@ def run_episode(actor, learning_algorithm, reward, state_observer, state_action_
         current_state = next_state
         current_iter += 1
         if state_action_space.is_terminal_state(current_state):
-            # reward_given = reward.get_rewards(current_state, next_action, next_state)
-            # learning_algorithm.receive_reward(current_state, next_action, next_state, reward_given)
+            reward_given = reward.get_rewards(current_state, (0, 0), next_state)
+            learning_algorithm.receive_reward(current_state, (0, 0), next_state, reward_given)
             break
 
     learning_algorithm.finalise_episode()

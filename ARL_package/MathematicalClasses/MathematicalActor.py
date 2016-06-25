@@ -11,7 +11,7 @@ class MathematicalActor(CodeFramework.Actor):
         self.mathematicalObserver = mathematicalObserver
         self.epsilon = greedy_epsilon
 
-        if greedy_epsilon > 0: # only import 'random' library if we want epsilon-greedy
+        if greedy_epsilon > 0:  # only import 'random' library if we want epsilon-greedy
             import random
             random.seed()
 

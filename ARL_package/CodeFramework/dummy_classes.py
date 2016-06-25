@@ -58,7 +58,7 @@ class DummyReward(Reward):
         self.actions = state_action_space.get_list_of_actions()
 
     def get_rewards(self, state, action, next_state, next_action=None):
-        if next_state == (0, 0):
+        if state == (0, 0): # reward being in the terminal state
             return 1000
         else:
             return 0
@@ -100,17 +100,20 @@ class DummyLearner(LearningAlgorithm):
         Update policy greedily, in the dummy example assuming equal transition probabilities
         """
         next_state_deterministic = \
-            lambda current_state, action: (current_state[0] + action[0], current_state[1] + action[1])
+            lambda current_state, next_action: (current_state[0] + next_action[0], current_state[1] + next_action[1])
+        try:
+            for state in self.policy.keys():
+                current_next_value = self.values[next_state_deterministic(state, self.policy[state])]
 
-        for state in self.policy.keys():
-            current_next_value = self.values[next_state_deterministic(state, self.policy[state])]
-
-            # find best action
-            for action in self.state_action_space.get_eligible_actions(state):
-                value_of_next = self.values[next_state_deterministic(state, action)]
-                if value_of_next >= current_next_value:
-                    self.policy[state] = action
-                    current_next_value = value_of_next
+                # find best action
+                for action in self.state_action_space.get_eligible_actions(state):
+                    value_of_next = self.values[next_state_deterministic(state, action)]
+                    if value_of_next >= current_next_value:
+                        self.policy[state] = action
+                        current_next_value = value_of_next
+        except TypeError as e:
+            print (action), (state)
+            raise
 
         print "DummyLearner: Episode ended, policy updated. Current policy: " + str(self.policy)
         print "DummyLearner: Current values: " + str(self.values)

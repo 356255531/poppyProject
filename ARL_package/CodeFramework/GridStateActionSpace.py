@@ -28,6 +28,9 @@ class GridStateActionSpace2D(StateActionSpace):
         self.states = [(i-half_dimensions[0], j-half_dimensions[1]) for i, j in np.ndindex(dimensions)]
 
         def __generate_possible_actions(dims, state_index, allow_diag=True):
+            if state_index == (0, 0):
+                return [(0, 0)]  # is terminal state => can only stay there!
+
             min_indices = -(np.array(dims)/2).astype(int)
             max_indices = (min_indices + dims) - (1, 1)
 
@@ -52,7 +55,7 @@ class GridStateActionSpace2D(StateActionSpace):
             self.eligible_actions[state] = __generate_possible_actions(
                 dimensions, state_index=state, allow_diag=allow_diag_actions)
 
-        self.actions = self.eligible_actions[(0, 0)]  # kind of all eligible actions unless your space is only 2 wide
+        self.actions = self.eligible_actions[(1, 0)]  # kind of all eligible actions unless your space is only 2 wide
 
     def get_list_of_states(self):
         """Returns a list of all states available"""
