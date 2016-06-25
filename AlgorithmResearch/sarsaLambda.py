@@ -35,10 +35,10 @@ class sarsaLambda(object):
 			eligibility[i] = {j:0 for j in self.actionSpace[i]}
 		return eligibility
 
-	def epsilonGreedySelection(self, currentState):
+	def get_next_action(self, currentState):
 		""" Pick the action from action space with given state by 
 			using epsilon greedy method """
-		if rd.random() > self.epsilonGreedy:
+		if rd.random() < self.epsilonGreedy:
 			actions = list(self.actionSpace[currentState])
 			action = actions[rd.randint(0, len(actions) - 1)]
 			return action
@@ -88,7 +88,7 @@ class sarsaLambda(object):
 			if len(list(nextState)) == 0:										# If next state is out of sight then no further action can be taken
 				nextAction = ()
 			else:
-				nextAction = self.epsilonGreedySelection(nextState)
+				nextAction = self.get_next_action(nextState)
 
 			self.updateQFunc(currentState, action, reward, nextState, nextAction)	# Update Q function with the new knowledge of reward
 
@@ -109,11 +109,13 @@ class sarsaLambda(object):
 			print 'Q Function'
 			for j in self.qFunc:
 				print j, ':', self.qFunc[j]
-			self.epsilonGreedy = 1 - (1 - self.epsilonGreedy) * 0.99
+			self.epsilonGreedy *= 0.99
 
 	def derivePolicy(self):
 		policy = {}
-		for i in self.stateSpace:
+		stateSpace = self.stateSpace
+		stateSpace.remove((0, 0))
+		for i in stateSpace:
 			optimalAction = max(self.qFunc[i].iteritems(), key=operator.itemgetter(1))[0]
 			policy[i] = optimalAction
 		return policy

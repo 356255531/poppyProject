@@ -31,7 +31,7 @@ class sarsaZero(LearningAlgorithm):
 	def get_next_action(self, currentState):
 		""" Pick the action from action space with given state by 
 			using epsilon greedy method """
-		if rd.random() > self.epsilonGreedy:
+		if rd.random() < self.epsilonGreedy:
 			actions = list(self.actionSpace[currentState])
 			action = actions[rd.randint(0, len(actions) - 1)]
 			return action
@@ -93,11 +93,13 @@ class sarsaZero(LearningAlgorithm):
 			print 'Q Function'
 			for j in self.qFunc:
 				print j, ':', self.qFunc[j]
-			self.epsilonGreedy = 1 - (1 - self.epsilonGreedy) * 0.99
+			self.epsilonGreedy *= 0.99
 
 	def derivePolicy(self):
 		policy = {}
-		for i in self.stateSpace:
+		stateSpace = self.stateSpace
+		stateSpace.remove((0, 0))
+		for i in stateSpace:
 			optimalAction = max(self.qFunc[i].iteritems(), key=operator.itemgetter(1))[0]
 			policy[i] = optimalAction
 		return policy

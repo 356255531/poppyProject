@@ -10,17 +10,17 @@ from reward import reward
 
 from sarsaZero import sarsaZero							# import the predefined RL algorithm
 from sarsaLambda import sarsaLambda
-# from sarsaWithLinApxt import sarsaWithLinApxt
+from sarsaWithLinApxt import sarsaWithLinApxt
 
 from Modules.problemDummy import problemDummy
 
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-positionMatrix = [2, 1]			# Number of state setting
-epsilonGreedy = 0.1				# Epsilon used in epsilonGreedy method	
+positionMatrix = [3, 2]			# Number of state setting
+epsilonGreedy = 1				# Epsilon used in epsilonGreedy method	
 alpha = 0.1						# Step Length
 gamma = 0.7						# Discount coefficient used in computation of TD error
-numEpisoids = 200				# Number of Episoids used in trainning
+numEpisoids = 1000				# Number of Episoids used in trainning
 lambdaDiscount = 0.9			# Lambda in SarsaLambda algorithm
 
 ################################### Creating Objects Requried by RL Algorithm ###################################
@@ -31,15 +31,16 @@ pro = problemDummy(r,s)
 # ################################### Reinforcement Learning ###################################
 sarsaZeroDummy = sarsaZero(pro, epsilonGreedy, numEpisoids, alpha, gamma)			#Creating the RL algorithm Module
 sarsaLambdaDummy = sarsaLambda(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
-# sarsaWithLinApxtDummy = sarsaWithLinApxt(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
+sarsaWithLinApxtDummy = sarsaWithLinApxt(pro, epsilonGreedy, numEpisoids, alpha, gamma, lambdaDiscount)
 
 
-sarsaZeroDummy.trainModel()					# Train the model with specific algorithm
+# sarsaZeroDummy.trainModel()					# Train the model with specific algorithm
 # sarsaLambdaDummy.trainModel()
-# sarsaWithLinApxtDummy.trainModel()
+sarsaWithLinApxtDummy.trainModel()
 
 
 print '\n'
 print 'The policy is'
 # print sarsaLambdaDummy.getPolicy()
-print sarsaZeroDummy.getPolicy()				# Output the policy derived by Q-function
+# print sarsaZeroDummy.getPolicy()				# Output the policy derived by Q-function
+print sarsaWithLinApxtDummy.getPolicy()

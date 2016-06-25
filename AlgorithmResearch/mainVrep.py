@@ -42,8 +42,8 @@ mass2 = 0
 io.add_cube(name2, position2, size2, mass2)
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-positionMatrix = [4, 2]			# Number of state setting
-epsilonGreedy = 0.1				# Epsilon used in epsilonGreedy method	
+positionMatrix = [2, 1]			# Number of state setting
+epsilonGreedy = 1				# Epsilon used in epsilonGreedy method	
 alpha = 0.1						# Step Length
 gamma = 0.7						# Discount coefficient used in computation of TD error
 numEpisoids = 200				# Number of Episoids used in trainning
@@ -66,5 +66,5 @@ SarsaZeroVrep.trainModel()					# Train the model with specific algorithm
 
 print '\n'
 print 'The policy is'
-print sarsaLambdaVrep.getPolicy()
-# print SarsaZeroVrep.getPolicy()				# Output the policy derived by Q-function
+# print sarsaLambdaVrep.getPolicy()
+print SarsaZeroVrep.getPolicy()				# Output the policy derived by Q-function

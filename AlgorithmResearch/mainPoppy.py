@@ -34,12 +34,12 @@ dxl_io = pypot.dynamixel.DxlIO(port)
 print('Connected!')
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-positionMatrix = [4, 2]			# Number of state setting
-epsilonGreedy = 0.1				# Epsilon used in epsilonGreedy method	
+positionMatrix = [2, 1]			# Number of state setting
+epsilonGreedy = 1			# Epsilon used in epsilonGreedy method	
 alpha = 0.1						# Step Length
 gamma = 0.7						# Discount coefficient used in computation of TD error
 numEpisoids = 200				# Number of Episoids used in trainning
-lambdaDiscount = 0.9			# Lambda in SarsaLambda algorithm
+lambdaDiscount = 0.7			# Lambda in SarsaLambda algorithm
 
 ################################### Creating Objects Requried by RL Algorithm ###################################
 p = CVStateobserver(positionMatrix)
