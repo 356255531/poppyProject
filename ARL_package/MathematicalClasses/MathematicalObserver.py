@@ -1,6 +1,10 @@
 __author__ = 'erik'
 
+<<<<<<< HEAD
 from .. import CodeFramework.StateObserver
+=======
+from .. import CodeFramework
+>>>>>>> 6e502084affca80e8184de2e84fbf86a43cf07dd
 
 
 class MathematicalObserver(CodeFramework.StateObserver):
