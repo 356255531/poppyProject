@@ -22,3 +22,20 @@ class StateActionSpace(object):
     def get_eligible_actions(self, state):
         """Returns eligible actions for state state"""
         pass
+
+    def is_terminal_state(self, state):
+        """
+        returns if the current state is terminal
+        :param state: state inquired about
+        :return: is_terminal: boolean
+        """
+        return bool(state)
+
+
+    def get_terminal_state(self):
+        """
+        Gets the representation of the terminal state
+
+        :return: terminal state
+        """
+        return []

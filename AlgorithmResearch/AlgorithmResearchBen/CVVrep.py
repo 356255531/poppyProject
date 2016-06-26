@@ -1,8 +1,8 @@
-__author__ = 'Zhiwei Han'
+__author__ = 'ben'
 import numpy as np
 import math
 
-class pseudoCV(object):
+class cvVrep(object):
     """ This class returns the current positon of poppy in Vrep
     within a math way """
     def __init__(self, poppy, io, name, positionMatrix):
@@ -64,7 +64,7 @@ class pseudoCV(object):
         angle2 = np.arccos(np.dot(tt, t) / np.linalg.norm(t)) / 3.14159 * 180
         if abs(angle2) > 18.5:
             return False
-        
+
         if objectProjectionOnOrthBasis3 < 0 and angle2 > 0:
             angle2 = -angle2
 
@@ -76,7 +76,7 @@ class pseudoCV(object):
         """ Return the position of centorid in state matrix
             if object out of perspective return () """
         angle = self.__canSeeJudge()
-        m, n = self.positionMatrix
+        m, n = (np.array(self.positionMatrix)/2).astype(int)
         if not angle:
             return []
         angle1, angle2 = angle
