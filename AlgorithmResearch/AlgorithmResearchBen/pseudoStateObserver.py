@@ -1,10 +1,10 @@
 from CodeFramework.StateObserver import StateObserver
-from pseudoCV import pseudoCV
+from CVVrep import cvVrep
 
-class pseudoStateObserver(StateObserver, pseudoCV):
+class pseudoStateObserver(StateObserver, cvVrep):
 	""" Use pseudoCV algorithm to observe the agent current state"""
 	def __init__(self, poppy, io, name, positionMatrix):
-		pseudoCV.__init__(self, poppy, io, name, positionMatrix)
+		cvVrep.__init__(self, poppy, io, name, positionMatrix)
 
 	def get_current_state(self):
 		""" Return the current state """

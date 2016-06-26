@@ -6,7 +6,7 @@ import cv2
 
 
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 return_value, image = cap.read()
 #cv2.imshow( "image", image )
 #cv2.waitKey(0)
@@ -42,9 +42,9 @@ for cnt in contours:
     if len(cnt) < 5:
         continue
     ellipse = cv2.fitEllipse(cnt)
-    cv2.ellipse(roi, ellipse, (0, 255, 0), 2)
+
     box = cv2.boxPoints(ellipse)
-    print (box)
+
 
     get_length = lambda p1, p2: np.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1]) ** 2)
 
@@ -55,7 +55,11 @@ for cnt in contours:
     print (ratio)
 
     box_center = np.mean(box, axis=0)
-    cv2.drawContours(roi, [np.int0([box_center, box_center, box_center, box_center])], 0, (255, 0, 0), 7)
+    if ratio < 1.25:
+        cv2.ellipse(roi, ellipse, (0, 255, 0), 2)
+        cv2.drawContours(roi, [np.int0([box_center, box_center, box_center, box_center])], 0, (255, 0, 0), 7)
+        print (box)
+        print (ratio)
 # cv2.imshow("Morphological Closing", closing)
 # cv2.waitKey(0)
 # cv2.imshow("Adaptive Thresholding", thresh)

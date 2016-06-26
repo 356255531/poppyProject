@@ -1,20 +1,14 @@
-__author__ = 'erik'
+__author__ = 'Zhiwei Han'
 
 from abc import ABCMeta, abstractmethod
 
 
-class Actor(object):
+class IfTerminal(object):
     """Goes from virtual actions to real ones"""
 
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def perform_action(self, action):
+    def is_terminal(self, state):
         """Execute some code to actually do the abstract action 'action' """
-        pass
-
-    def initialise_episode(self):
-        """ Do initial stuff before episode starts
-        """
-        pass
-    
+    pass
