@@ -11,7 +11,7 @@ import numpy as np
 
 
 class LearningAlgorithmBen(LearningAlgorithm):
-    def __init__(self, state_action_space, Reward):
+    def __init__(self, state_action_space, Reward, oldData = dict()):
         assert isinstance(state_action_space, StateActionSpace)
 
         self.figure_count = 1
@@ -22,12 +22,19 @@ class LearningAlgorithmBen(LearningAlgorithm):
             self.actions.append((0,0))
         self.rewardObj = Reward
         self.epsilon = 0.1
-        self.values = [0 for x in self.states]  # changed it from self.actions to self.states
+        if oldData.has_key('values'):
+            self.values = oldData['values']
+        else:
+            self.values = [0 for x in self.states]  # changed it from self.actions to self.states
+
         self.gamma = 0.7
         self.learning_rate = 0.3
-        self.policy = [ (0,0) for x in self.states]
-        for stat in self.states:
-            self.policy[self.states.index(stat)] = self.state_action_space.get_eligible_actions(stat)[0]
+        if oldData.has_key('policy'):
+            self.policy = oldData['policy']
+        else:
+            self.policy = [ (0,0) for x in self.states]
+            for stat in self.states:
+                self.policy[self.states.index(stat)] = self.state_action_space.get_eligible_actions(stat)[0]
 
         self.frequencies = [dict() for x in self.states]
         for state in self.states:
@@ -36,6 +43,12 @@ class LearningAlgorithmBen(LearningAlgorithm):
                 state_freq.update({action: [[0 for x in self.states], 0]})
         print self.states
         print self.frequencies
+
+    def get_old_data(self):
+        oldData = dict()
+        oldData['values'] = self.values
+        oldData['policy'] = self.policy
+        return oldData
 
     def compute_expectation(self, curr_state, freq_dict):
         exp_values_per_actions = [0 for x in self.state_action_space.get_eligible_actions(curr_state)]
@@ -156,13 +169,24 @@ if __name__ == '__main__':
     # dummy_observer = pseudoStateObserver(poppy, io, name, positionMatrix)
     dummy_observer = MathematicalObserver(dummy_states_actions)
     # dummy_actor = actorVrep(poppy, io, name, positionMatrix)
-    dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.0)
+    dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.1)
     dummy_reward = rewardSimple()
     dummy_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward)
 
     # run_learning(dummy_actor, dummy_learner, dummy_reward, dummy_observer)
     for i in xrange(100):
-        run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=5000)
+        run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
+
+    print 'current_state', dummy_observer.get_current_state()
+    print "Values: ", str(dummy_learner.values)
+
     dummy_learner.plot_results()
+
+    new_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
+
+    for i in range(10):
+        run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
+    dummy_learner.plot_results()
+
     print 'current_state', dummy_observer.get_current_state()
     print "Values: ", str(dummy_learner.values)
