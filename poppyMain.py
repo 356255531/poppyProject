@@ -12,7 +12,7 @@ from ARL_package.PoppyClasses.GridStateActionSpace2D import GridStateActionSpace
 from ARL_package.PoppyClasses.CVStateObserver import CVStateObserver 
 from ARL_package.PoppyClasses.actorPoppy import actorPoppy
 from ARL_package.reward import reward
-from ARL_package.Algorithms import sarsaZero
+from AlgorithmsZhiwei import sarsaZero
 
 ################################### Initialize Poppy ###################################
 ports = pypot.dynamixel.get_available_ports()

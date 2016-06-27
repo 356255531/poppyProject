@@ -9,7 +9,7 @@ from ..CodeFramework.Actor import Actor
 
 class actorPoppy(Actor):
 	""" Real Poppy """
-	def __init__(self, poppy, dimensions):
+	def __init__(self, poppy, dimensions=(3, 1)):
 		""" 
 		params:
 			poppy: robot interface 
