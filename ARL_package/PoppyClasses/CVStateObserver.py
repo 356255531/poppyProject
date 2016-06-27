@@ -1,10 +1,10 @@
-from CodeFramework.StateObserver import StateObserver
+from ..CodeFramework.StateObserver import StateObserver
 from CVAlgorithm import CVAlgorithm
 from math import floor
 
 class CVStateObserver(StateObserver, CVAlgorithm):
 	""" Use computer vision algorithm to observe the agent current state"""
-	def __init__(self, dimensions):
+	def __init__(self, dimensions=(3, 1)):
 		super(CVStateObserver, self).__init__()
 		self.dimensions = dimensions
 

@@ -5,7 +5,7 @@ import random as rd
 import time
 import numpy as np
 
-from CodeFramework import Actor
+from ..CodeFramework.Actor import Actor
 
 class actorPoppy(Actor):
 	""" Real Poppy """

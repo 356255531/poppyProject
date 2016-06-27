@@ -1,5 +1,5 @@
 __author__ = 'Zhiwei Han'
-from CodeFramework.StateActionSpace import StateActionSpace
+from ..CodeFramework.StateActionSpace import StateActionSpace
 from itertools import product
 from math import floor
 

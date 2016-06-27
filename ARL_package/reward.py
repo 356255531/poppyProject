@@ -1,6 +1,6 @@
 __author__ = 'Zhiwei Han'
 
-from Modules.CodeFramework.Reward import Reward
+from CodeFramework.Reward import Reward
 import numpy as np
 
 class reward(Reward):

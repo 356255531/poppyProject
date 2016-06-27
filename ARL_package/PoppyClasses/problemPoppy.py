@@ -1,9 +1,9 @@
 __author__ = 'Zhiwei Han'
-from CodeFramework.TrainningWorld import TrainningWorld
+from ..CodeFramework.TrainningWorld import TrainningWorld
 from GridStateActionSpace2D import GridStateActionSpace2D
 from CVStateObserver import CVStateObserver 
 from actorPoppy import actorPoppy
-from reward import reward
+from ..reward import reward
 import time
 
 class problemPoppy(TrainningWorld):
