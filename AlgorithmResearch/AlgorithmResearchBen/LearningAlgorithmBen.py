@@ -141,9 +141,27 @@ if __name__ == '__main__':
     import time
     import math
 
-    """
-    from poppy.creatures import PoppyTorso
+    positionMatrix = (5, 3)
 
+    dummy_states_actions = GridStateActionSpace2D(dimensions=positionMatrix,allow_diag_actions=True)
+
+    # dummy_observer = pseudoStateObserver(poppy, io, name, positionMatrix)
+    dummy_observer = MathematicalObserver(dummy_states_actions)
+    # dummy_actor = actorVrep(poppy, io, name, positionMatrix)
+    dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.1)
+    dummy_reward = rewardSimple()
+    dummy_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward)
+
+    # run_learning(dummy_actor, dummy_learner, dummy_reward, dummy_observer)
+    for i in xrange(500):
+        run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
+
+    print 'current_state', dummy_observer.get_current_state()
+    print "Values: ", str(dummy_learner.values)
+
+    dummy_learner.plot_results()
+
+    from poppy.creatures import PoppyTorso
 
     poppy = PoppyTorso(simulator='vrep')
 
@@ -159,33 +177,14 @@ if __name__ == '__main__':
     sizes1 = [3, 1, 1]
     io.add_cube(name1, position1, sizes1, mass)
     io.set_object_position('cube', position=[0, -1, 1.05])
-    positionMatrix = (9, 5)
-    """
 
-    positionMatrix = (9, 9)
-
-    dummy_states_actions = GridStateActionSpace2D(dimensions=positionMatrix,allow_diag_actions=True)
-
-    # dummy_observer = pseudoStateObserver(poppy, io, name, positionMatrix)
-    dummy_observer = MathematicalObserver(dummy_states_actions)
-    # dummy_actor = actorVrep(poppy, io, name, positionMatrix)
-    dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.1)
-    dummy_reward = rewardSimple()
-    dummy_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward)
-
-    # run_learning(dummy_actor, dummy_learner, dummy_reward, dummy_observer)
-    for i in xrange(100):
-        run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
-
-    print 'current_state', dummy_observer.get_current_state()
-    print "Values: ", str(dummy_learner.values)
-
-    dummy_learner.plot_results()
+    poppy_observer = pseudoStateObserver(poppy, io, name, positionMatrix)
+    poppy_actor = actorVrep(poppy, io, name, positionMatrix)
 
     new_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
 
-    for i in range(10):
-        run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
+    for i in range(50):
+        run_episode(poppy_actor, dummy_learner, dummy_reward, poppy_observer, dummy_states_actions, max_num_iterations=100)
     dummy_learner.plot_results()
 
     print 'current_state', dummy_observer.get_current_state()
