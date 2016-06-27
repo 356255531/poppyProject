@@ -53,8 +53,6 @@ class LearningAlgorithmBen(LearningAlgorithm):
             exp_values_per_actions[self.state_action_space.get_eligible_actions(curr_state).index(action)] = exp_curr_action
         # print "curr_state: ", curr_state, "freq_dict: ", freq_dict
         # print "expected Values per action: ",  exp_values_per_actions
-        #  if not(  in self.state_action_space.get_eligible_actions(curr_state)):
-            # print 'ERROR IN COMPUTE_EXPECTATION', curr_state, exp_values_per_actions
         return exp_values_per_actions
 
     def get_next_action(self, current_state):
