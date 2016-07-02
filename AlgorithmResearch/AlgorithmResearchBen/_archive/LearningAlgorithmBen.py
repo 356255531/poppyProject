@@ -14,11 +14,10 @@ class LearningAlgorithmBen(LearningAlgorithm):
     def __init__(self, state_action_space, Reward, oldData = dict()):
         assert isinstance(state_action_space, StateActionSpace)
 
-        self.figure_count = 1 # if several figures shall be displayed
+        self.figure_count = 1
         self.state_action_space = state_action_space
         self.states = state_action_space.get_list_of_states()
         self.actions = state_action_space.get_list_of_actions()
-
         if not( (0,0) in self.actions ):
             self.actions.append((0,0))
         self.rewardObj = Reward
@@ -65,6 +64,8 @@ class LearningAlgorithmBen(LearningAlgorithm):
                 td_error = self.rewardObj.get_rewards(curr_state, action, nextState=state, problemType='capture') + self.gamma * self.values[self.states.index(state)]
                 exp_curr_action += probab_currState_action_state * td_error
             exp_values_per_actions[self.state_action_space.get_eligible_actions(curr_state).index(action)] = exp_curr_action
+        # print "curr_state: ", curr_state, "freq_dict: ", freq_dict
+        # print "expected Values per action: ",  exp_values_per_actions
         return exp_values_per_actions
 
     def get_next_action(self, current_state):
@@ -89,6 +90,9 @@ class LearningAlgorithmBen(LearningAlgorithm):
         self.frequencies[old_state_index][action][1] += 1  # update total count of old_state reached
 
     def finalise_episode(self):
+        # print('finalise episode')
+        # Update policy
+        # if self.global_counter == self.max_number_iterations:
         for state in self.states:
             state_index = self.states.index(state)
             expected_values = self.compute_expectation(state, self.frequencies[state_index])
@@ -97,6 +101,7 @@ class LearningAlgorithmBen(LearningAlgorithm):
                 print 'ERROR IN FINALISE EPISODE'
         # print 'policy updated'
         print self.policy, self.values
+        # self.plot_results()
 
     def plot_results(self):
         max_tup_coord = max(self.states)
@@ -113,7 +118,6 @@ class LearningAlgorithmBen(LearningAlgorithm):
             for x in range(min_x, max_x + 1):
                 new_row_values.append( self.values[self.states.index((x, -y))] )
             matr_values.append(new_row_values)
-        # For Reference see
         # http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.matshow
         # http://matplotlib.org/examples/pylab_examples/matshow.html
         VALUES_MAT = np.array(matr_values)
@@ -125,23 +129,30 @@ class LearningAlgorithmBen(LearningAlgorithm):
 
 if __name__ == '__main__':
     from rewardSimple import rewardSimple
-    from ActorVrep import ActorVrep
-    from ObserverVrep import ObserverVrep
+    from actorVrep import actorVrep
+    from pseudoStateObserver import pseudoStateObserver
     from MathematicalActor import MathematicalActor
     from MathematicalObserver  import MathematicalObserver
     from CodeFramework.GridStateActionSpace import GridStateActionSpace2D
     from CodeFramework.main import run_learning
     from CodeFramework.main import run_episode
+    from LearningAlgorithmBen import LearningAlgorithmBen
     import numpy as np
+    import time
+    import math
 
     positionMatrix = (5, 3)
 
     dummy_states_actions = GridStateActionSpace2D(dimensions=positionMatrix,allow_diag_actions=True)
+
+    # dummy_observer = pseudoStateObserver(poppy, io, name, positionMatrix)
     dummy_observer = MathematicalObserver(dummy_states_actions)
+    # dummy_actor = actorVrep(poppy, io, name, positionMatrix)
     dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.1)
     dummy_reward = rewardSimple()
     dummy_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward)
 
+    # run_learning(dummy_actor, dummy_learner, dummy_reward, dummy_observer)
     for i in xrange(500):
         run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
 
@@ -150,8 +161,25 @@ if __name__ == '__main__':
 
     dummy_learner.plot_results()
 
-    poppy_observer = ObserverVrep(dummy_states_actions,positionMatrix)
-    poppy_actor = ActorVrep(poppy_observer)
+    from poppy.creatures import PoppyTorso
+
+    poppy = PoppyTorso(simulator='vrep')
+
+    io = poppy._controllers[0].io
+    name = 'cube'
+    position = [0, -0.15, 0.85]  # X, Y, Z
+    sizes = [0.1, 0.1, 0.1]  # in meters
+    mass = 0  # in kg
+    io.add_cube(name, position, sizes, mass)
+    time.sleep(1)
+    name1 = 'cube2'
+    position1 = [-0.4, -1, 0.5]
+    sizes1 = [3, 1, 1]
+    io.add_cube(name1, position1, sizes1, mass)
+    io.set_object_position('cube', position=[0, -1, 1.05])
+
+    poppy_observer = pseudoStateObserver(poppy, io, name, positionMatrix)
+    poppy_actor = actorVrep(poppy, io, name, positionMatrix)
 
     new_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
 
