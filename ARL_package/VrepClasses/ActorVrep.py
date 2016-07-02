@@ -4,10 +4,10 @@ __author__ = 'ben'
 import random as rd
 import time
 
-from CodeFramework.Actor import Actor
-from ObserverVrep import ObserverVrep		# Import the required modules
+from .. import CodeFramework
+from . import ObserverVrep		# Import the required modules
 
-class ActorVrep(Actor):
+class ActorVrep(CodeFramework.Actor):
     """Agent in the trainning enviromtn"""
     def __init__(self, observerVrep):
         assert isinstance(observerVrep, ObserverVrep)
@@ -40,7 +40,7 @@ class ActorVrep(Actor):
 
     def perform_action(self, action):
         """ This function performs the action using the function motorControl """
-        motionUnit = 3
+        motionUnit = 1
         current_state = self.observer.get_current_state()
         time.sleep(0.5)
         eligible_actions = self.observer.state_actions_space.get_eligible_actions(current_state)
@@ -74,10 +74,10 @@ class ActorVrep(Actor):
 
 if __name__ == '__main__':
     """ Only for testing - no modification necessary """
-    from CodeFramework.GridStateActionSpace import GridStateActionSpace2D
+    from .. import CodeFramework
 
     positionMatrix = (11,5)
-    state_action_space = GridStateActionSpace2D(dimensions=positionMatrix, allow_diag_actions=True)
+    state_action_space = CodeFramework.GridStateActionSpace2D(dimensions=positionMatrix, allow_diag_actions=True)
 
     observer = ObserverVrep(state_action_space, positionMatrix)
     actor = ActorVrep(observer)

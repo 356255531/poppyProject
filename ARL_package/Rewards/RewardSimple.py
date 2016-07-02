@@ -3,9 +3,9 @@ __author__ = 'ben'
 # 1 created a simple get_rewards-function
 # 2 changed the name get_reward -> get_rewards (as defined in the framework)
 
-from CodeFramework.Reward import Reward
+from .. import CodeFramework
 
-class RewardSimple(Reward):
+class RewardSimple(CodeFramework.Reward):
     """ The class gives the setting of reward """
     def __init__(self, final_reward, final_penalty):
         self.reward = final_reward

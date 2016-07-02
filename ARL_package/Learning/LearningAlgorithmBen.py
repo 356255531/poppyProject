@@ -1,18 +1,15 @@
 __author__ = 'ben'
 
-from CodeFramework.StateActionSpace import StateActionSpace
-from CodeFramework.Actor import Actor
-from CodeFramework.LearningAlgorithm import LearningAlgorithm
-from CodeFramework.Reward import Reward
-from CodeFramework.StateObserver import StateObserver
+from .. import CodeFramework
 import random as rd
 from matplotlib import pyplot
 import numpy as np
 
 
-class LearningAlgorithmBen(LearningAlgorithm):
+class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
     def __init__(self, state_action_space, Reward, oldData = dict()):
-        assert isinstance(state_action_space, StateActionSpace)
+        assert isinstance(state_action_space, CodeFramework.StateActionSpace)
+        assert isinstance(Reward, CodeFramework.Reward)
 
         self.figure_count = 1 # if several figures shall be displayed
         self.state_action_space = state_action_space
@@ -62,7 +59,7 @@ class LearningAlgorithmBen(LearningAlgorithm):
                     probab_currState_action_state = float(freq_per_action[self.states.index(state)]) / float(tot_number_counts)
                 else:
                     probab_currState_action_state = 1/float(len(self.states))
-                td_error = self.rewardObj.get_rewards(curr_state, action, nextState=state, problemType='capture') + self.gamma * self.values[self.states.index(state)]
+                td_error = self.rewardObj.get_rewards(curr_state, action, nextState=state) + self.gamma * self.values[self.states.index(state)]
                 exp_curr_action += probab_currState_action_state * td_error
             exp_values_per_actions[self.state_action_space.get_eligible_actions(curr_state).index(action)] = exp_curr_action
         return exp_values_per_actions

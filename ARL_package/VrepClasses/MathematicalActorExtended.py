@@ -1,14 +1,14 @@
 __author__ = 'erik' # modified by ben
-import CodeFramework # changed this
-from MathematicalObserver import MathematicalObserver # changed this
+from .. import CodeFramework # changed this
+from .. import MathematicalClasses
 import random as rd
 
 
-class MathematicalActor(CodeFramework.Actor):
+class MathematicalActorExtended(CodeFramework.Actor):
     """Deterministic Actor that prints every action it takes"""
 
     def __init__(self, mathematicalObserver, greedy_epsilon=0):
-        assert isinstance(mathematicalObserver, MathematicalObserver)
+        assert isinstance(mathematicalObserver, MathematicalClasses.MathematicalObserver)
         self.mathematicalObserver = mathematicalObserver
         self.epsilon = greedy_epsilon
 
