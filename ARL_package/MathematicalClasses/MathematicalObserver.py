@@ -18,3 +18,4 @@ class MathematicalObserver(CodeFramework.StateObserver):
         :return: current_state
         """
         return self.current_state
+

@@ -18,8 +18,6 @@ learningAlgorithm = CodeFramework.dummy_classes.DummyLearner(gridStateActionSpac
 reward = CodeFramework.dummy_classes.DummyReward(gridStateActionSpace)
 
 
-for i in range(10000):
-    observer.current_state = (random_choice(dims[0]) + gridStateActionSpace.min_indices[0],
-                              random_choice(dims[1]) + gridStateActionSpace.min_indices[1])
+for i in range(1000):
     CodeFramework.main.run_episode(
         actor, learningAlgorithm, reward, observer, gridStateActionSpace, max_num_iterations=500)

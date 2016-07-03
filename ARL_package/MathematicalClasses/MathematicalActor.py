@@ -6,12 +6,13 @@ from . import MathematicalObserver
 class MathematicalActor(CodeFramework.Actor):
     """Deterministic Actor that prints every action it takes"""
 
-    def __init__(self, mathematicalObserver, greedy_epsilon=0):
+    def __init__(self, mathematicalObserver, greedy_epsilon=0, initialise_episode_random=True):
         assert isinstance(mathematicalObserver, MathematicalObserver)
         self.mathematicalObserver = mathematicalObserver
         self.epsilon = greedy_epsilon
+        self.initialise_episode_random = initialise_episode_random
 
-        if greedy_epsilon > 0:  # only import 'random' library if we want epsilon-greedy
+        if greedy_epsilon > 0 or initialise_episode_random:  # only import 'random' library if we want epsilon-greedy
             import random
             random.seed()
 
@@ -62,7 +63,15 @@ class MathematicalActor(CodeFramework.Actor):
 
     def initialise_episode(self):
         """
-        Don't need to do anything, really.
+        Don't need to do anything, really . Or initialise randomly, if wanted.
         :return:
         """
-        pass
+        if self.initialise_episode_random:
+            def get_random_state():
+                max_indices = self.mathematicalObserver.state_action_space.max_indices
+                min_indices = self.mathematicalObserver.state_action_space.min_indices
+                dims = max_indices - min_indices
+                yield (self.random_choice(dims[0]) + min_indices[0],
+                       self.random_choice(dims[1]) + min_indices[1])
+            self.mathematicalObserver.current_state = get_random_state()
+        return
