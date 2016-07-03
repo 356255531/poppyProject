@@ -6,6 +6,9 @@ import math
 
 
 class ObserverVrep(CodeFramework.StateObserver):
+
+    time_scaling = 1.0
+
     """ Use pseudoCV algorithm to observe the agent's current state"""
     def __init__(self, state_action_space, positionMatrix):
         assert isinstance(state_action_space, CodeFramework.GridStateActionSpace2D)  # possibly change to 2DGrid
@@ -23,7 +26,7 @@ class ObserverVrep(CodeFramework.StateObserver):
         mobile_object_mass = 0  # in kg
         self.io.add_cube(self.mobile_object_name, mobile_object_position, mobile_object_sizes, mobile_object_mass)
 
-        time.sleep(1)
+        time.sleep(1*self.time_scaling)
 
         # Defining an object as support for the mobile object to keep it in place
         self.support_object_name = 'cube2'
@@ -33,7 +36,7 @@ class ObserverVrep(CodeFramework.StateObserver):
 
         self.io.add_cube(self.support_object_name, support_object_position, support_object_sizes, support_object_mass)
 
-        self.io.set_object_position('cube', position=[0, -1, 1.05])
+        self.io.set_object_position('cube', position=support_object_position)
 
     def get_current_state(self):
         """ Return the current state """
