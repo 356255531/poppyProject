@@ -4,12 +4,13 @@ from ARL_package.CodeFramework.LearningAlgorithm import LearningAlgorithm
 import numpy as np
 from random import randint, random
 import operator
+from copy import deepcopy
 
 class SarsaLambda(LearningAlgorithm):
 	"""docstring for SarsaZeroVrep"""
-	def __init__(self, problem, epsilonGreedy, numEpisoids, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent=None, qFunc=None):
+	def __init__(self, problem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent=None, qFunc=None):
 		self.epsilonGreedy = epsilonGreedy
-		self.numEpisoids = numEpisoids
+		self.numEpisodes = numEpisodes
 		self.learningRate = learningRate
 		self.gamma = gamma
 		self.lambdaDiscount = lambdaDiscount
@@ -111,32 +112,51 @@ class SarsaLambda(LearningAlgorithm):
 			iterNum += 1
 		print visitedStates
 		print 'The episoid has been done in ', step, 'step'
-		return step, totalReward, visitedStates
+		isTerminal = self.problem.is_terminal_state(currentState)
+		if isTerminal == 1:
+			reachCenter = True
+		else:
+			reachCenter = False
+		return step, totalReward, reachCenter
 
 	def train_model(self):
 		""" Train the whole model within the given episoids number """
-		for i in xrange(self.numEpisoids):
+		for i in xrange(self.numEpisodes):
+			if i % 10	 == 0:
+				self.qFuncHistory.append(deepcopy(self.qFunc))
+				self.policyHistory.append(self.get_policy())
+
 			print 'Trace', i + 1, ':'
-			self.run_episode()
-			print 'Q Function'
-			for j in self.qFunc:
-				print j, ':', self.qFunc[j]
+			stepNum, totalReward, reachCenter = self.run_episode()
 			self.epsilonGreedy *= 0.99
 
-	def derive_policy(self):
+			self.diagInfo.append((stepNum, totalReward, reachCenter))
+
+		if self.plotAgent:
+			self.plot(self.diagInfo, self.qFuncHistory, self.policyHistory)
+
+	def get_policy(self):
 		policy = {}
 		stateSpace = self.stateSpace
-		stateSpace.remove((0, 0))
-		for i in stateSpace:
+		for i in stateSpace:			
 			optimalAction = max(self.qFunc[i].iteritems(), key=operator.itemgetter(1))[0]
 			policy[i] = optimalAction
 		return policy
 
-	def get_policy(self):
-		return  self.derive_policy()
-
 	def export_qFunc(self):
 		return self.qFunc
 
-	def plot(self):
-		pass
+	def plot(self, diagInfo, qFuncHistory, policyHistory):
+		"""
+		Diagramm:
+			Horizontal: Episoid Number
+			Vertical:
+				1. Step Number
+				2. Total Reward
+				3. If reach center
+				4. Q function difference every 100 episoid
+		Graph:
+			Policy after 100 Episoid
+		"""
+		self.plotAgent.plot(diagInfo, qFuncHistory, policyHistory)
+		# self.plotAgent.plot(self.diagInfo, self.policyHistory)
