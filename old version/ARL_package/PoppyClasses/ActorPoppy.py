@@ -5,7 +5,7 @@ import random as rd
 import time
 import numpy as np
 
-from ..CodeFramework import Actor
+from ..CodeFramework.Actor import Actor
 
 class ActorPoppy(Actor):
 	""" Real Poppy """
@@ -15,7 +15,7 @@ class ActorPoppy(Actor):
 			poppy: robot interface 
 			dimensions: tuple(m, n), grid number of state in horizontal and vertical
 		"""
-		super(ActorPoppy, self).__init__()
+		super(actorPoppy, self).__init__()
 		self.dimensions = dimensions
 		self.poppy = poppy
 
@@ -40,22 +40,18 @@ class ActorPoppy(Actor):
 		angleY = self.poppy.get_present_position((37, ))[0]
 		angleZ = self.poppy.get_present_position((36, ))[0]
 
-		mm, nn = self.dimensions
-		motionUnitX = 10 / mm
-		motionUnitY = 6 / nn
-		smallerEle = min(motionUnitX, motionUnitY)
-		motionUnit = max(1, smallerEle)
+		motionUnit = 3
 
 		if m != 0 and n != 0:
 			goalZ = angleZ + 1.5 * motionUnit * m
-			goalY = angleY + 1 * motionUnit * n
+			goalY = angleY - 1 * motionUnit * n
 			pos = dict(zip([36, 37], [goalZ, goalY]))
 			self.poppy.set_goal_position(pos)
 		if m != 0 and n == 0:
 			goalZ = angleZ + 1.5 * motionUnit * m
 			self.poppy.set_goal_position({36:goalZ})
 		if m == 0 and n != 0:
-			goalY = angleY + 1 * motionUnit * n
+			goalY = angleY - 1 * motionUnit * n
 			self.poppy.set_goal_position({37:goalY})
 		time.sleep(0.04)			
 
@@ -64,9 +60,9 @@ class ActorPoppy(Actor):
 		self.poppy.set_goal_position(pos)
 		time.sleep(0.04)
 
-	def initialise_episode(self):
+	def initialise_episode(self, stateSpace):
 		""" Initialize by changing the position of red point """
-		self.come_to_zero
+		self.come_to_zero()
 
 if __name__ == '__main__':
 	""" Only for testing and need not to be modified """
