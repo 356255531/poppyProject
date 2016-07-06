@@ -35,12 +35,12 @@ class GridStateActionSpace2D(StateActionSpace):
             max_indices = (min_indices + dims) - (1, 1)
 
             # disallow going out of edges
-            min_action = -(np.less(min_indices, state_index)).astype(int)
-            max_action = np.less(state_index, max_indices).astype(int)
+            # min_action = -(np.less(min_indices, state_index)).astype(int)
+            # max_action = np.less(state_index, max_indices).astype(int)
 
             # have same actions everywhere
-            # min_action = -(np.less(min_indices, (0, 0))).astype(int)
-            # max_action = np.less((0, 0), max_indices).astype(int)
+            min_action = -(np.less(min_indices, (0, 0))).astype(int)
+            max_action = np.less((0, 0), max_indices).astype(int)
 
             actions = []
             for i in range(min_action[0], max_action[0] + 1):
@@ -71,6 +71,7 @@ class GridStateActionSpace2D(StateActionSpace):
         return self.eligible_actions[state]
 
     def is_terminal_state(self, state):
+        import numpy as np
         """returns if the current state is terminal
 
         Current implementation: (0,0) is terminal
@@ -78,4 +79,9 @@ class GridStateActionSpace2D(StateActionSpace):
         :param state: state inquired about
         :return: is_terminal: boolean
         """
-        return state == (0, 0)
+        if np.less(state, self.min_indices).any() or np.greater(state, self.max_indices).any():
+            return -1
+        elif state == (0, 0):
+            return 1
+        else:
+            return 0
