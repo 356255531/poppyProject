@@ -73,5 +73,5 @@ class MathematicalActor(CodeFramework.Actor):
                 dims = max_indices - min_indices
                 yield (self.random_choice(dims[0]) + min_indices[0],
                        self.random_choice(dims[1]) + min_indices[1])
-            self.mathematicalObserver.current_state = get_random_state()
+            self.mathematicalObserver.current_state = get_random_state().next()
         return
