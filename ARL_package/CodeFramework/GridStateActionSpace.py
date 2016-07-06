@@ -26,9 +26,10 @@ class GridStateActionSpace2D(StateActionSpace):
 
         """All States"""
         self.states = [(i-half_dimensions[0], j-half_dimensions[1]) for i, j in np.ndindex(dimensions)]
+        self.states.append((10000, 10000))  # terminal state
 
         def __generate_possible_actions(dims, state_index, allow_diag=True):
-            if state_index == (0, 0):
+            if state_index == (0, 0) or state_index == (10000, 10000):
                 return [(0, 0)]  # is terminal state => can only stay there!
 
             min_indices = -(np.array(dims)/2).astype(int)

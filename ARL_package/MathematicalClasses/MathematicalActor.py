@@ -56,6 +56,12 @@ class MathematicalActor(CodeFramework.Actor):
                       " from " + str(current_state) + " to " + str(next_state)
                 self.mathematicalObserver.current_state = next_state
 
+            if self.mathematicalObserver.state_action_space.is_terminal_state(
+                    self.mathematicalObserver.current_state
+                    ) == -1:
+
+                self.mathematicalObserver.current_state = (10000, 10000)
+
         else:
             print "MathematicalActor: From state " + str(current_state) + \
                   ", action " + str(action) + " is not eligible"
