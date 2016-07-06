@@ -24,6 +24,7 @@ numEpisodes = 5000					# Number of Episodes used in trainning
 lambdaDiscount = 0.5				# Lambda in SarsaLambda algorithm
 iterNumLimit = 500					# Iteration number Limit
 
+
 ################################### Reinforcement Learning with Mathematical Model ###################################
 ## Initialize MathModel and Create Objects
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
@@ -39,7 +40,8 @@ dummyReward = RewardZhiwei(dummyStateActionSpace)
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, 
 	dummyReward, dummyStateActionSpace)
 
-plotAgent = PlotAgent(dimension)
+#plotAgent = PlotAgent(dimension)
+plotAgent = None
 
 ## Reinforcement Learning with Mathmatical Model
 sarsaZeroDummyLerner = SarsaZero(dummyProblem, epsilonGreedy, 

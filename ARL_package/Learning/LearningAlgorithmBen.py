@@ -7,8 +7,8 @@ import numpy as np
 
 
 class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
-    def __init__(self, state_action_space, Reward, oldData = dict()):
-        assert isinstance(state_action_space, CodeFramework.StateActionSpace)
+    def __init__( self, state_action_space, Reward, epsilon, gamma, learning_rate, oldData = dict() ):
+        assert isinstance(state_action_space, CodeFramework.GridStateActionSpace2D)
         assert isinstance(Reward, CodeFramework.Reward)
 
         self.figure_count = 1 # if several figures shall be displayed
@@ -16,17 +16,19 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
         self.states = state_action_space.get_list_of_states()
         self.actions = state_action_space.get_list_of_actions()
 
+        """
         if not( (0,0) in self.actions ):
             self.actions.append((0,0))
+        """
         self.rewardObj = Reward
-        self.epsilon = 0.1
+        self.epsilon = epsilon
+        self.gamma = gamma
+        self.learning_rate = learning_rate
         if oldData.has_key('values'):
             self.values = oldData['values']
         else:
             self.values = [0 for x in self.states]  # changed it from self.actions to self.states
 
-        self.gamma = 0.7
-        self.learning_rate = 0.3
         if oldData.has_key('policy'):
             self.policy = oldData['policy']
         else:
@@ -39,8 +41,8 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
             state_freq = self.frequencies[self.states.index(state)]
             for action in self.state_action_space.get_eligible_actions(state):
                 state_freq.update({action: [[0 for x in self.states], 0]})
-        print self.states
-        print self.frequencies
+        # print self.states
+        # print self.frequencies
 
     def get_old_data(self):
         oldData = dict()
@@ -65,7 +67,7 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
         return exp_values_per_actions
 
     def get_next_action(self, current_state):
-        if rd.random() >= 0.1:
+        if rd.random() >= self.epsilon:
             # print 'deterministic choice', self.policy[self.states.index(current_state)]
             return self.policy[self.states.index(current_state)]
         else:
@@ -75,6 +77,8 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
 
     def receive_reward(self, old_state, action, next_state, reward):
         """Do TD return"""
+        terminal_status = self.state_action_space.is_terminal_state(next_state)
+
         old_state_index = self.states.index(old_state)
         next_state_index = self.states.index(next_state)
 
@@ -93,11 +97,11 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
             if not(self.policy[state_index] in self.state_action_space.get_eligible_actions(state)):
                 print 'ERROR IN FINALISE EPISODE'
         # print 'policy updated'
-        print self.policy, self.values
+        # print self.policy, self.values
 
     def plot_results(self):
-        max_tup_coord = max(self.states)
-        min_tup_coord = min(self.states)
+        max_tup_coord = self.state_action_space.max_indices
+        min_tup_coord = self.state_action_space.min_indices
 
         min_x = min_tup_coord[0]
         min_y = min_tup_coord[1]

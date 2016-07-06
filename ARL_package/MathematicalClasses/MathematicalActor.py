@@ -13,8 +13,9 @@ class MathematicalActor(CodeFramework.Actor):
         self.initialise_episode_random = initialise_episode_random
 
         if greedy_epsilon > 0 or initialise_episode_random:  # only import 'random' library if we want epsilon-greedy
+            import time
             import random
-            random.seed()
+            random.seed(time.time())
 
             def probabilistic_event(probability):
                 """ Check if a probabilistic event happens.
@@ -44,16 +45,20 @@ class MathematicalActor(CodeFramework.Actor):
         if action in eligible_actions:
             if self.epsilon == 0 or not self.probabilistic_event(self.epsilon):
                 next_state = (current_state[0] + action[0], current_state[1] + action[1])
+                """
                 print "MathematicalActor: Executing policy-action " + str(action) + \
                       " from " + str(current_state) + " to " + str(next_state)
+                """
                 self.mathematicalObserver.current_state = next_state
             else:
                 num_choices = len(eligible_actions)
                 choice = self.random_choice(num_choices)
                 random_action = eligible_actions[choice]
                 next_state = (current_state[0] + random_action[0], current_state[1] + random_action[1])
+                """
                 print "MathematicalActor: Executing epsilon-random action" + str(random_action) + \
                       " from " + str(current_state) + " to " + str(next_state)
+                """
                 self.mathematicalObserver.current_state = next_state
 
             if self.mathematicalObserver.state_action_space.is_terminal_state(

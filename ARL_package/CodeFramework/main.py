@@ -52,9 +52,9 @@ def run_episode(actor, learning_algorithm, reward, state_observer, state_action_
             break
 
     learning_algorithm.finalise_episode()
-
+    """
     print "run_episode: Episode ended after " + str(current_iter) + " iterations."
-
+    """
     return total_reward
 
 if __name__ == '__main__':

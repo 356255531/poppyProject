@@ -43,7 +43,7 @@ class ObserverVrep(CodeFramework.StateObserver):
         angle = self.get_relative_angles()
         m, n = (np.array(self.positionMatrix) / 2).astype(int)
         if not angle:
-            return []
+            return (10000,10000)
         angle1, angle2 = angle
         x = math.floor(abs(np.sin(angle1 / 180.0 * 3.14159) / np.sin(self.max_angle_hori / 180.0 * 3.14159) * (m + 1)))
         y = math.floor(abs(np.sin(angle2 / 180.0 * 3.14159) / np.sin(self.max_angle_vert / 180.0 * 3.14159) * (n + 1)))
@@ -51,6 +51,9 @@ class ObserverVrep(CodeFramework.StateObserver):
             x = -x
         if angle2 < 0:
             y = -y
+
+
+
         return (x, y)
 
     def __headForwardDirection(self):
