@@ -118,6 +118,8 @@ class SarsaZero(LearningAlgorithm):
 
 			self.diagInfo.append((stepNum, totalReward, reachCenter))
 
+		np.savetxt('data.csv',self.diagInfo, delimiter=',')
+        
 		if self.plotAgent:
 			self.plot(self.diagInfo, self.qFuncHistory, self.policyHistory)
 
