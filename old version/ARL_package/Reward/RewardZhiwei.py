@@ -17,7 +17,7 @@ class RewardZhiwei(Reward):
 		if problemType == 'capture':
 			ifTerminal = self.stateActionSpace.is_terminal_state(nextState)
 			if not ifTerminal:
-				return -1
+				return 0
 			elif ifTerminal == 1:
 				return 10
 			else:

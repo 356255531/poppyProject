@@ -14,10 +14,10 @@ from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApx
 
 from ARL_package.CodeFramework import PlotAgent
 ################################### Reinforcement Learning Parameters Setting ###################################
-dimension = (5, 3)					# Number of state setting
+dimension = (7, 5)					# Number of state setting
 epsilonGreedy = 0.3					# Epsilon used in epsilonGreedy method	
 alpha = 0.1							# Step Length
-gamma = 0.7							# Discount coefficient used in computation of TD error
+gamma = 0.5							# Discount coefficient used in computation of TD error
 numEpisoids = 2000					# Number of Episoids used in trainning
 lambdaDiscount = 0.5				# Lambda in SarsaLambda algorithm
 iterNumLimit = 500					# Iteration number Limit
@@ -56,39 +56,39 @@ qFunc = sarsaZeroDummyLerner.export_qFunc()
 
 ################################### Reinforcement Learning with Real Poppy ###################################
 
-## Initialize Poppy
-from ARL_package.PoppyClasses import ProblemPoppy, CVStateObserver, ActorPoppy
+# ## Initialize Poppy
+# from ARL_package.PoppyClasses import ProblemPoppy, CVStateObserver, ActorPoppy
 
-import pypot.dynamixel
+# import pypot.dynamixel
 
-ports = pypot.dynamixel.get_available_ports()
-print('available ports:', ports)
+# ports = pypot.dynamixel.get_available_ports()
+# print('available ports:', ports)
 
-port = ports[0]
-print('Using the first on the list', port)
+# port = ports[0]
+# print('Using the first on the list', port)
 
-dxl_io = pypot.dynamixel.DxlIO(port)
-print('Connected!')
+# dxl_io = pypot.dynamixel.DxlIO(port)
+# print('Connected!')
 
-## Create Objects Requried by RL Algorithm
-poppyStateActionSpace = StateActionSpaceFull(dimension)
-poppyObserver = CVStateObserver(dimension)
-poppyActor = ActorPoppy(dxl_io, dimension)
-poppyReward = RewardZhiwei()
+# ## Create Objects Requried by RL Algorithm
+# poppyStateActionSpace = StateActionSpaceFull(dimension)
+# poppyObserver = CVStateObserver(dimension)
+# poppyActor = ActorPoppy(dxl_io, dimension)
+# poppyReward = RewardZhiwei()
 
-poppyProblem = ProblemPoppy(poppyObserver, poppyActor, 
-	poppyReward, poppyStateActionSpace)
+# poppyProblem = ProblemPoppy(poppyObserver, poppyActor, 
+# 	poppyReward, poppyStateActionSpace)
 
-## Reinforcement Learning with Real Poppy
-SarsaZeroPoppyLerner = SarsaZero(dummyProblem, epsilonGreedy, 
-	numEpisoids, alpha, gamma, iterNumLimit, plotAgent, qFunc)
-sarsaLambdaPoppyLerner = SarsaLambda(dummyProblem, epsilonGreedy, 
-	numEpisoids, alpha, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
+# ## Reinforcement Learning with Real Poppy
+# SarsaZeroPoppyLerner = SarsaZero(dummyProblem, epsilonGreedy, 
+# 	numEpisoids, alpha, gamma, iterNumLimit, plotAgent, qFunc)
+# sarsaLambdaPoppyLerner = SarsaLambda(dummyProblem, epsilonGreedy, 
+# 	numEpisoids, alpha, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
 
-## Train Model
-sarsaZeroPoppyLerner.train_model()
-# sarsaLambdaPoppyLerner.train_model()
+# ## Train Model
+# sarsaZeroPoppyLerner.train_model()
+# # sarsaLambdaPoppyLerner.train_model()
 
-print 'Policy is'
-print sarsaZeroPoppyLerner.get_policy()
-# print sarsaLambdaPoppyLerner.get_policy()
+# print 'Policy is'
+# print sarsaZeroPoppyLerner.get_policy()
+# # print sarsaLambdaPoppyLerner.get_policy()

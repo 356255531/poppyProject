@@ -69,7 +69,7 @@ class SarsaLambda(LearningAlgorithm):
 		for i in self.stateSpace:
 			for j in self.actionSpace:
 				self.qFunc[currentState][action] += self.learningRate * tdError * self.eligibility[currentState][action]
-				self.qFunc[currentState][action] = round(self.qFunc[currentState][action], 3)
+				self.qFunc[currentState][action] = self.qFunc[currentState][action], 3
 				self.eligibility[currentState][action] *= self.gamma * self.lambdaDiscount
 
 	def run_episode(self):

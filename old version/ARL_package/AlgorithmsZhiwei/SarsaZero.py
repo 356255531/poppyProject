@@ -9,9 +9,9 @@ from copy import deepcopy
 
 class SarsaZero(LearningAlgorithm):
 	""" The Sarsa(0) algorithm dessign. """
-	def __init__(self, problem, epsilonGreedy, numEpisoid, learningRate, gamma, iterNumLimit, plotAgent=None, qFunc=None):
+	def __init__(self, problem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent=None, qFunc=None):
 		self.epsilonGreedy = epsilonGreedy
-		self.numEpisoid = numEpisoid
+		self.numEpisodes = numEpisodes
 		self.learningRate = learningRate
 		self.gamma = gamma
 		self.iterNumLimit = iterNumLimit
@@ -56,13 +56,13 @@ class SarsaZero(LearningAlgorithm):
 		isTerminal = self.problem.is_terminal_state(nextState)
 		if not isTerminal:
 			tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
-			self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.learningRate * tdError, 3)
+			self.qFunc[currentState][action] = self.qFunc[currentState][action] + self.learningRate * tdError, 3
 		else:
 			tdError = reward - self.qFunc[currentState][action]
-			self.qFunc[currentState][action] = round(self.qFunc[currentState][action] + self.learningRate * tdError, 3)
+			self.qFunc[currentState][action] = self.qFunc[currentState][action] + self.learningRate * tdError, 3
 
 	def run_episode(self):
-		""" Train the model with only one episoid and 
+		""" Train the model with only one Episodes and 
 			use the predefined function update the Q
 			function in every step """
 		visitedStates = []
@@ -98,7 +98,7 @@ class SarsaZero(LearningAlgorithm):
 			step += 1
 			iterNum += 1
 		print visitedStates
-		print 'The episoid has been done in ', step, 'step'
+		print 'The Episodes has been done in ', step, 'step'
 		isTerminal = self.problem.is_terminal_state(currentState)
 		if isTerminal == 1:
 			reachCenter = True
@@ -107,7 +107,7 @@ class SarsaZero(LearningAlgorithm):
 		return step, totalReward, reachCenter
 
 	def train_model(self):
-		for i in xrange(self.numEpisoid):
+		for i in xrange(self.numEpisodes):
 			if i % 10	 == 0:
 				self.qFuncHistory.append(deepcopy(self.qFunc))
 				self.policyHistory.append(self.get_policy())
@@ -135,14 +135,14 @@ class SarsaZero(LearningAlgorithm):
 	def plot(self, diagInfo, qFuncHistory, policyHistory):
 		"""
 		Diagramm:
-			Horizontal: Episoid Number
+			Horizontal: Episodes Number
 			Vertical:
 				1. Step Number
 				2. Total Reward
 				3. If reach center
-				4. Q function difference every 100 episoid
+				4. Q function difference every 100 Episodes
 		Graph:
-			Policy after 100 Episoid
+			Policy after 100 Episodes
 		"""
 		self.plotAgent.plot(diagInfo, qFuncHistory, policyHistory)
 		# self.plotAgent.plot(self.diagInfo, self.policyHistory)

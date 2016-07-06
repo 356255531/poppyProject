@@ -38,6 +38,8 @@ class PlotAgent(object):
 		for singlePolicy in reversed(policyHistory):
 			soaList = []
 			for state in singlePolicy.keys():
+				if state == (0, 0):
+					continue
 				action = singlePolicy[state]
 				x, y = state
 				m, n = action
