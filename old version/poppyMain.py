@@ -6,7 +6,7 @@ __author__ = 'Zhiwei Han'
 	And then call the class methed trainModel() to train. (It may depends on how you design your RL algorithm module)
 	In this case sarsaZero is an algorithm module which was predefined under sarsaZero.py file.
 	"""
-from ARL_package.StateActionSetting import StateActionSpaceFull
+from ARL_package.StateActionSetting import StateActionSpaceMath
 
 from ARL_package.Reward import RewardZhiwei
 from ARL_package.Reward import RewardBen
@@ -27,9 +27,9 @@ iterNumLimit = 500					# Iteration number Limit
 ################################### Reinforcement Learning with Mathematical Model ###################################
 ## Initialize MathModel and Create Objects
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
-from ARL_package.StateActionSetting import StateActionSpaceFull
+from ARL_package.StateActionSetting import StateActionSpaceMath
 
-dummyStateActionSpace = StateActionSpaceFull(dimension)
+dummyStateActionSpace = StateActionSpaceMath(dimension)
 # dummyStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
 dummyObserver = MathematicalObserver(dummyStateActionSpace)
 dummyActor = MathematicalActor(dummyObserver)
@@ -78,7 +78,7 @@ qFunc = sarsaZeroDummyLerner.export_qFunc()
 # # mass2 = 0  # in kg
 # # io.add_cube(name2, position2, sizes2, mass2)
 
-# vrepStateActionSpace = StateActionSpaceFull(dimension)
+# vrepStateActionSpace = StateActionSpaceMath(dimension)
 # # vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
 # vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
 # vrepActor = ActorVrep(vrepObserver)
@@ -122,7 +122,7 @@ qFunc = sarsaZeroDummyLerner.export_qFunc()
 # print('Connected!')
 
 # ## Create Objects Requried by RL Algorithm
-# poppyStateActionSpace = StateActionSpaceFull(dimension)
+# poppyStateActionSpace = StateActionSpaceMath(dimension)
 # poppyObserver = CVStateObserver(dimension)
 # poppyActor = ActorPoppy(dxl_io, dimension)
 # poppyReward = RewardZhiwei()

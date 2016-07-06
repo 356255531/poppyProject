@@ -3,7 +3,7 @@ from ..CodeFramework import StateActionSpace
 from itertools import product
 from math import floor
 
-class StateActionSpaceFull(StateActionSpace):
+class StateActionSpacePoppy(StateActionSpace):
     """Grid-based state-action space
 
     Grid based state-action space. Each state and action is a tuple of two
@@ -12,7 +12,7 @@ class StateActionSpaceFull(StateActionSpace):
     def __init__(self, dimensions = (3,1)):
         """Initialise state space with dimensions.
 
-        :rtype : StateActionSpaceFull
+        :rtype : StateActionSpacePoppy
         :param dimensions: Tuple of size in each direction.
         :param allow_diag_actions: Whether to allow diagonal actions or not
         :return:
@@ -35,6 +35,7 @@ class StateActionSpaceFull(StateActionSpace):
         stateOneDimY = range(-indices_y, indices_y + 1)
         states = [(i, j) for i, j in product(stateOneDimX, stateOneDimY)]
         return states
+
     def get_list_of_states(self):
         """Returns a list of all states available"""
         return self.states
@@ -47,14 +48,12 @@ class StateActionSpaceFull(StateActionSpace):
         return self.actions
 
     def is_terminal_state(self, state):
-        m, n = self.dimensions
-        x, y = state
-        if abs(x) > floor(m / 2) or abs(y) > floor(n / 2):
+        if state == ():
             return -1
         if state == (0, 0):
             return 1
         return False
 
 if __name__ == '__main__':
-    stateActionSpace = StateActionSpaceFull((3, 2))
+    stateActionSpace = StateActionSpacePoppy((3, 2))
     print stateActionSpace.get_list_of_states()
