@@ -56,10 +56,10 @@ class SarsaZero(LearningAlgorithm):
 		isTerminal = self.problem.is_terminal_state(nextState)
 		if not isTerminal:
 			tdError = reward + self.gamma * self.qFunc[nextState][nextAction] - self.qFunc[currentState][action]
-			self.qFunc[currentState][action] = self.qFunc[currentState][action] + self.learningRate * tdError, 3
+			self.qFunc[currentState][action] = self.qFunc[currentState][action] + self.learningRate * tdError
 		else:
 			tdError = reward - self.qFunc[currentState][action]
-			self.qFunc[currentState][action] = self.qFunc[currentState][action] + self.learningRate * tdError, 3
+			self.qFunc[currentState][action] = self.qFunc[currentState][action] + self.learningRate * tdError
 
 	def run_episode(self):
 		""" Train the model with only one Episodes and 
