@@ -29,6 +29,8 @@ def run_episode(actor, learning_algorithm, reward, state_observer, state_action_
     assert (isinstance(state_observer, StateObserver))
     assert isinstance(state_action_space, StateActionSpace)
 
+    total_reward = 0
+
     actor.initialise_episode()
     current_state = state_observer.get_current_state()
     current_iter = 0
@@ -39,15 +41,21 @@ def run_episode(actor, learning_algorithm, reward, state_observer, state_action_
         reward_given = reward.get_rewards(current_state, next_action, next_state)
         learning_algorithm.receive_reward(current_state, next_action, next_state, reward_given)
 
+        total_reward += reward_given
+
         current_state = next_state
         current_iter += 1
         if state_action_space.is_terminal_state(current_state):
             reward_given = reward.get_rewards(current_state, (0, 0), next_state)
             learning_algorithm.receive_reward(current_state, (0, 0), next_state, reward_given)
+            total_reward += reward_given
             break
 
     learning_algorithm.finalise_episode()
+
     print "run_episode: Episode ended after " + str(current_iter) + " iterations."
+
+    return total_reward
 
 if __name__ == '__main__':
     from dummy_classes import *
