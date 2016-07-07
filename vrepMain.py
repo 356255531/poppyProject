@@ -9,7 +9,7 @@ import pypot.dynamixel
 positionMatrix = (7, 5)
 moving_average = list([])
 mov_avg_number = 10
-num_episodes = 50
+num_episodes = 500
 epsilon = 0.1
 gamma = 0.7
 learning_rate = 0.3
@@ -30,7 +30,7 @@ for j in xrange(number_of_test_runs):
 
 
     for i in xrange(num_episodes):
-        rewards.append( CodeFramework.main.run_episode(actor, learner, reward, observer, states_actions, max_num_iterations=10) )
+        rewards.append( CodeFramework.main.run_episode(actor, learner, reward, observer, states_actions, max_num_iterations=100) )
         if i >= mov_avg_number:
             moving_average.append( np.mean(np.array(rewards)[i-mov_avg_number:i+1]) )
 
