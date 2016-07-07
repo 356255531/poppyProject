@@ -7,12 +7,12 @@ import numpy as np
 positionMatrix = (7, 5)
 moving_average = list([])
 mov_avg_number = 10
-num_episodes = 50
+num_episodes = 500
 epsilon = 0.1
 gamma = 0.7
 learning_rate = 0.3
 
-number_of_test_runs = 3
+number_of_test_runs = 100
 rewards_time_series = list()
 
 for j in xrange(number_of_test_runs):
@@ -32,7 +32,9 @@ for j in xrange(number_of_test_runs):
         if i >= mov_avg_number:
             moving_average.append( np.mean(np.array(rewards)[i-mov_avg_number:i+1]) )
 
-    rewards_time_series.append(rewards)
+    rewards_time_series.append(np.array(rewards))
+
+    print "Finished run {} of {}".format(j, number_of_test_runs)
 
 
 np.savetxt('data.csv', np.array(rewards_time_series).T, delimiter=',')
