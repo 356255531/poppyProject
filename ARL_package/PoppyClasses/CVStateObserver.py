@@ -12,7 +12,7 @@ class CVStateObserver(StateObserver, CVAlgorithm):
 		""" Return the current state """
 		a = super(CVStateObserver, self).getPosition()
 		if len(list(a)) == 0:
-			return ()
+			return (10000, 10000)
 		mm, nn = self.dimensions
 		if mm % 2 == 0:
 			mm += 1
