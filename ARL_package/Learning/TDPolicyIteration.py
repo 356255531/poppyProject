@@ -6,7 +6,7 @@ from matplotlib import pyplot
 import numpy as np
 
 
-class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
+class TDPolicyIteration(CodeFramework.LearningAlgorithm):
     def __init__( self, state_action_space, Reward, epsilon, gamma, learning_rate, oldData = dict() ):
         assert isinstance(state_action_space, CodeFramework.GridStateActionSpace2D)
         assert isinstance(Reward, CodeFramework.Reward)
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     dummy_observer = MathematicalObserver(dummy_states_actions)
     dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.1)
     dummy_reward = rewardSimple()
-    dummy_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward)
+    dummy_learner = TDPolicyIteration(dummy_states_actions, dummy_reward)
 
     for i in xrange(500):
         run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     poppy_observer = ObserverVrep(dummy_states_actions,positionMatrix)
     poppy_actor = ActorVrep(poppy_observer)
 
-    new_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
+    new_learner = TDPolicyIteration(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
 
     for i in range(50):
         run_episode(poppy_actor, dummy_learner, dummy_reward, poppy_observer, dummy_states_actions, max_num_iterations=100)

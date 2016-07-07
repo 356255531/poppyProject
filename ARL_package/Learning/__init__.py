@@ -1,4 +1,4 @@
 __author__ = 'ben'
 
-from LearningAlgorithmBen import LearningAlgorithmBen
+from TDPolicyIteration import TDPolicyIteration
 
