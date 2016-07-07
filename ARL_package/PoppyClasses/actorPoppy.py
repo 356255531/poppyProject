@@ -64,7 +64,7 @@ class actorPoppy(Actor):
 		self.poppy.set_goal_position(pos)
 		time.sleep(0.04)
 
-	def initialise_episode(self, stateSpace):
+	def initialise_episode(self):
 		""" Initialize by changing the position of red point """
 		pass
 
