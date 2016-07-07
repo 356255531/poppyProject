@@ -23,8 +23,8 @@ class CVStateObserver(StateObserver, CVAlgorithm):
 		y, x = coordinate
 		n, m = shape
 
-		unitX = m / mm
-		unitY = n / nn
+		unitX = m / float(mm)
+		unitY = n / float(nn)
 		xx = floor(x / unitX)
 		yy = floor(y / unitY)
 		print 'mm', unitX
@@ -32,6 +32,11 @@ class CVStateObserver(StateObserver, CVAlgorithm):
 		
 		x = int(xx - floor(mm / 2))
 		y = int(yy - floor(nn / 2))
+
+		print 'x,y:',x,-y
+		if (x < -floor(self.dimensions[0]/2) or x > floor(self.dimensions[0]/2) or
+			y < -floor(self.dimensions[1]/2) or y > floor(self.dimensions[1]/2)):
+			return (10000,10000)
 
 		return (x, -y)
 
