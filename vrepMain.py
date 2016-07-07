@@ -48,12 +48,12 @@ print "Values: ", str(learner.values)
 learner.plot_results()
 
 
-"""
+# """
 # Step 2 - Vrep-Simulation
 poppy_observer = VrepClasses.ObserverVrep(states_actions, positionMatrix)
 poppy_actor = VrepClasses.ActorVrep(poppy_observer)
 
-new_learner = Learning.LearningAlgorithmBen(states_actions, reward, oldData=learner.get_old_data())
+new_learner = Learning.LearningAlgorithmBen(states_actions, reward, epsilon, gamma, learning_rate, oldData=learner.get_old_data())
 
 for i in range(50):
     CodeFramework.main.run_episode(poppy_actor, learner, reward, poppy_observer, states_actions, max_num_iterations=100)
@@ -62,4 +62,4 @@ learner.plot_results()
 
 print 'Current_state: ', observer.get_current_state()
 print "Values: ", str(learner.values)
-"""
+# """

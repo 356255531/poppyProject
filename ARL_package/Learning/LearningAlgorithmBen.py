@@ -61,8 +61,8 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
                     probab_currState_action_state = float(freq_per_action[self.states.index(state)]) / float(tot_number_counts)
                 else:
                     probab_currState_action_state = 1/float(len(self.states))
-                td_error = self.rewardObj.get_rewards(curr_state, action, nextState=state) + self.gamma * self.values[self.states.index(state)]
-                exp_curr_action += probab_currState_action_state * td_error
+                exp_component = self.rewardObj.get_rewards(curr_state, action, nextState=state) + self.gamma * self.values[self.states.index(state)]
+                exp_curr_action += probab_currState_action_state * exp_component
             exp_values_per_actions[self.state_action_space.get_eligible_actions(curr_state).index(action)] = exp_curr_action
         return exp_values_per_actions
 
