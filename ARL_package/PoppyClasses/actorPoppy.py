@@ -40,22 +40,18 @@ class actorPoppy(Actor):
 		angleY = self.poppy.get_present_position((37, ))[0]
 		angleZ = self.poppy.get_present_position((36, ))[0]
 
-		mm, nn = self.dimensions
-		motionUnitX = 10 / mm
-		motionUnitY = 6 / nn
-		smallerEle = min(motionUnitX, motionUnitY)
-		motionUnit = max(1, smallerEle)
+		motionUnit = 3 # CHANGED THIS
 
 		if m != 0 and n != 0:
 			goalZ = angleZ + 1.5 * motionUnit * m
-			goalY = angleY + 1 * motionUnit * n
+			goalY = angleY - 1 * motionUnit * n
 			pos = dict(zip([36, 37], [goalZ, goalY]))
 			self.poppy.set_goal_position(pos)
 		if m != 0 and n == 0:
 			goalZ = angleZ + 1.5 * motionUnit * m
 			self.poppy.set_goal_position({36:goalZ})
 		if m == 0 and n != 0:
-			goalY = angleY + 1 * motionUnit * n
+			goalY = angleY - 1 * motionUnit * n
 			self.poppy.set_goal_position({37:goalY})
 		time.sleep(0.04)			
 
