@@ -66,7 +66,7 @@ class actorPoppy(Actor):
 
 	def initialise_episode(self, stateSpace):
 		""" Initialize by changing the position of red point """
-		pass
+		self.come_to_zero
 
 if __name__ == '__main__':
 	""" Only for testing and need not to be modified """

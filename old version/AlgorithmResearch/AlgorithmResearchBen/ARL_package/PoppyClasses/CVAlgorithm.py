@@ -18,6 +18,8 @@ class CVAlgorithm(object):
         ramp_frames = 3
         for i in xrange(ramp_frames):
             temp = get_image()
+        cv2.imshow('dd', temp)
+        cv2.waitKey(0)
         return temp
 
     def __getMask(self, image):

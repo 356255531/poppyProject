@@ -15,7 +15,7 @@ class ActorPoppy(Actor):
 			poppy: robot interface 
 			dimensions: tuple(m, n), grid number of state in horizontal and vertical
 		"""
-		super(actorPoppy, self).__init__()
+		super(ActorPoppy, self).__init__()
 		self.dimensions = dimensions
 		self.poppy = poppy
 

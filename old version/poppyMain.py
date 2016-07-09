@@ -15,6 +15,9 @@ from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApx
 
 from ARL_package.CodeFramework import PlotAgent
 from ARL_package.CodeFramework import GridStateActionSpace2D
+
+from ARL_package.StateActionSetting import StateActionSpaceMath, StateActionSpaceVrep
+
 ################################### Reinforcement Learning Parameters Setting ###################################
 dimension = (7, 5)					# Number of state setting
 epsilonGreedy = 0.1					# Epsilon used in epsilonGreedy method	
@@ -28,7 +31,6 @@ iterNumLimit = 500					# Iteration number Limit
 ################################### Reinforcement Learning with Mathematical Model ###################################
 ## Initialize MathModel and Create Objects
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
-from ARL_package.StateActionSetting import StateActionSpaceMath
 
 dummyStateActionSpace = StateActionSpaceMath(dimension)
 # dummyStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
@@ -40,7 +42,7 @@ dummyReward = RewardZhiwei(dummyStateActionSpace)
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, 
 	dummyReward, dummyStateActionSpace)
 
-#plotAgent = PlotAgent(dimension)
+# plotAgent = PlotAgent(dimension)
 plotAgent = None
 
 ## Reinforcement Learning with Mathmatical Model
@@ -61,56 +63,63 @@ qFunc = sarsaZeroDummyLerner.export_qFunc()
 # # qFunc = sarsaLambdaDummyLerner.export_qFunc()
 
 ################################### Reinforcement Learning with Vrep ###################################
-# from ARL_package.VrepClasses import ObserverVrep, ActorVrep
-# from time import sleep
+from ARL_package.VrepClasses import ObserverVrep, ActorVrep, ProblemVrep
 
-# # poppy = PoppyTorso(simulator='vrep')
+from time import sleep
 
-# # io = poppy._controllers[0].io
-# # name1 = 'support'
-# # position1 = [-0.4, -1, 0.5]
-# # sizes1 = [3, 1, 1]
-# # mass1 = 0  # in kg
-# # io.add_cube(name1, position1, sizes1, mass1)
+# poppy = PoppyTorso(simulator='vrep')
 
-# # sleep(1)
-# # name2 = 'cube'
-# # position2 = [0, -1, 1.05]  # X, Y, Z
-# # sizes2 = [0.1, 0.1, 0.1]  # in meters
-# # mass2 = 0  # in kg
-# # io.add_cube(name2, position2, sizes2, mass2)
+# io = poppy._controllers[0].io
+# name1 = 'support'
+# position1 = [-0.4, -1, 0.5]
+# sizes1 = [3, 1, 1]
+# mass1 = 0  # in kg
+# io.add_cube(name1, position1, sizes1, mass1)
 
-# vrepStateActionSpace = StateActionSpaceMath(dimension)
-# # vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
-# vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
-# vrepActor = ActorVrep(vrepObserver)
-# vrepReward = RewardZhiwei(vrepStateActionSpace)
+# sleep(1)
+# name2 = 'cube'
+# position2 = [0, -1, 1.05]  # X, Y, Z
+# sizes2 = [0.1, 0.1, 0.1]  # in meters
+# mass2 = 0  # in kg
+# io.add_cube(name2, position2, sizes2, mass2)
 
-# vrepProblem = ProblemVrep(vrepObserver, vrepActor, 
-# 	vrepReward, vrepStateActionSpace)
+vrepStateActionSpace = StateActionSpaceVrep(dimension)
+# vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
+vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
+vrepActor = ActorVrep(vrepObserver)
+vrepReward = RewardZhiwei(vrepStateActionSpace)
 
-# plotAgent = PlotAgent(dimension)
+vrepProblem = ProblemVrep(vrepObserver, vrepActor, 
+	vrepReward, vrepStateActionSpace)
 
-# ## Reinforcement Learning with Mathmatical Model
-# sarsaZeroVrepLerner = SarsaZero(vrepProblem, epsilonGreedy, 
-# 	numEpisodes, alpha, gamma, iterNumLimit, plotAgent)
-# sarsaLambdaVrepLerner = SarsaLambda(vrepProblem, epsilonGreedy, 
-# 	numEpisodes, alpha, gamma, lambdaDiscount, iterNumLimit, plotAgent)
+vrepActor.initialise_episode()
+print 'fake', vrepObserver.get_current_state()
+plotAgent = PlotAgent(dimension)
 
-# ## Train Model
-# # sarsaZeroVrepLerner.train_model()
+## Reinforcement Learning with Mathmatical Model
+sarsaZeroVrepLerner = SarsaZero(vrepProblem, epsilonGreedy, 
+	numEpisodes, alpha, gamma, iterNumLimit, plotAgent, qFunc)
+sarsaLambdaVrepLerner = SarsaLambda(vrepProblem, epsilonGreedy, 
+	numEpisodes, alpha, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
+
+vrepProblem.get_initial_state()
+print vrepProblem.get_current_state()
+## Train Model
+# sarsaZeroVrepLerner.train_model()
 # sarsaLambdaVrepLerner.train_model()
 
-# print 'Policy is'
-# print sarsaZeroVrepLerner.get_policy()
-# # print sarsaLambdaVrepLerner.get_policy()
+print 'Policy is'
+print sarsaZeroVrepLerner.get_policy()
+# print sarsaLambdaVrepLerner.get_policy()
 
 # qFunc = sarsaZeroVrepLerner.export_qFunc()
-# # # qFunc = sarsaLambdaDummyLerner.export_qFunc()
+# qFunc = sarsaLambdaDummyLerner.export_qFunc()
 ################################### Reinforcement Learning with Real Poppy ###################################
 
 # ## Initialize Poppy
 # from ARL_package.PoppyClasses import ProblemPoppy, CVStateObserver, ActorPoppy
+# from ARL_package.StateActionSetting import StateActionSpacePoppy
+
 
 # import pypot.dynamixel
 
@@ -123,8 +132,8 @@ qFunc = sarsaZeroDummyLerner.export_qFunc()
 # dxl_io = pypot.dynamixel.DxlIO(port)
 # print('Connected!')
 
-# ## Create Objects Requried by RL Algorithm
-# poppyStateActionSpace = StateActionSpaceMath(dimension)
+# # Create Objects Requried by RL Algorithm
+# poppyStateActionSpace = StateActionSpacePoppy(dimension)
 # poppyObserver = CVStateObserver(dimension)
 # poppyActor = ActorPoppy(dxl_io, dimension)
 # poppyReward = RewardZhiwei()

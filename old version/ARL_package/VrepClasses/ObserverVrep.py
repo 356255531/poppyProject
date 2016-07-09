@@ -11,7 +11,7 @@ class ObserverVrep(CodeFramework.StateObserver):
 
     """ Use pseudoCV algorithm to observe the agent's current state"""
     def __init__(self, state_action_space, positionMatrix):
-        assert isinstance(state_action_space, CodeFramework.GridStateActionSpace2D)  # possibly change to 2DGrid
+        # assert isinstance(state_action_space, CodeFramework.GridStateActionSpace2D)  # possibly change to 2DGrid
         self.state_actions_space = state_action_space
         self.poppy = PoppyTorso(simulator='vrep')
         self.io = self.poppy._controllers[0].io
@@ -43,7 +43,7 @@ class ObserverVrep(CodeFramework.StateObserver):
         angle = self.get_relative_angles()
         m, n = (np.array(self.positionMatrix) / 2).astype(int)
         if not angle:
-            return []
+            return ()
         angle1, angle2 = angle
         x = math.floor(abs(np.sin(angle1 / 180.0 * 3.14159) / np.sin(self.max_angle_hori / 180.0 * 3.14159) * (m + 1)))
         y = math.floor(abs(np.sin(angle2 / 180.0 * 3.14159) / np.sin(self.max_angle_vert / 180.0 * 3.14159) * (n + 1)))
@@ -116,7 +116,6 @@ class ObserverVrep(CodeFramework.StateObserver):
 
 
 if __name__ == '__main__':
-    from .. import CodeFramework
 
     positionMatrix = (5,3)
     state_action_space = CodeFramework.GridStateActionSpace2D(dimensions=positionMatrix, allow_diag_actions=True)
