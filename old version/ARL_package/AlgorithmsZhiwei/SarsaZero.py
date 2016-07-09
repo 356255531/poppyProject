@@ -119,15 +119,15 @@ class SarsaZero(LearningAlgorithm):
 
 			self.diagInfo.append((stepNum, totalReward, reachCenter))
 
-		try:
-			data = np.loadtxt('data.csv',delimiter=',')
-			data = np.column_stack((data,np.array(self.diagInfo)[:,1].flatten()))
-			print data.shape
-			#print 'works'
-		except IOError:
-			data = np.array(self.diagInfo)[:,1]
-			print 'does not work'
-		np.savetxt('data.csv',data, delimiter=',')
+		# try:
+		# 	data = np.loadtxt('data.csv',delimiter=',')
+		# 	data = np.column_stack((data,np.array(self.diagInfo)[:,1].flatten()))
+		# 	print data.shape
+		# 	#print 'works'
+		# except IOError:
+		# 	data = np.array(self.diagInfo)[:,1]
+		# 	print 'does not work'
+		# np.savetxt('data.csv',data, delimiter=',')
         
 		if self.plotAgent:
 			self.plot(self.diagInfo, self.qFuncHistory, self.policyHistory)

@@ -40,7 +40,7 @@ class actorPoppy(Actor):
 		angleY = self.poppy.get_present_position((37, ))[0]
 		angleZ = self.poppy.get_present_position((36, ))[0]
 
-		motionUnit = 3 # CHANGED THIS
+		motionUnit = 3
 
 		if m != 0 and n != 0:
 			goalZ = angleZ + 1.5 * motionUnit * m
@@ -60,14 +60,9 @@ class actorPoppy(Actor):
 		self.poppy.set_goal_position(pos)
 		time.sleep(0.04)
 
-	def initialise_episode(self):
+	def initialise_episode(self, stateSpace):
 		""" Initialize by changing the position of red point """
-<<<<<<< HEAD
-		self.come_to_zero
-=======
 		self.come_to_zero()
-		pass
->>>>>>> 6d05284cf9215df6a46e94160b151510cc29ab09
 
 if __name__ == '__main__':
 	""" Only for testing and need not to be modified """

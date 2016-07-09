@@ -1,18 +1,20 @@
 __author__ = 'ben'
 
-from ARL_package import CodeFramework, VrepClasses, Learning, Rewards, MathematicalClasses
+from ARL_package import CodeFramework, VrepClasses, Learning, Rewards, MathematicalClasses, PoppyClasses
 import matplotlib.pyplot as plt
 import numpy as np
+import pypot.dynamixel
+# Added Poppy-Classes as well to have a running version in place
 
 positionMatrix = (7, 5)
 moving_average = list([])
 mov_avg_number = 10
-num_episodes = 500
+num_episodes = 50
 epsilon = 0.1
 gamma = 0.7
 learning_rate = 0.3
 
-number_of_test_runs = 100
+number_of_test_runs = 1
 rewards_time_series = list()
 
 for j in xrange(number_of_test_runs):
@@ -23,7 +25,7 @@ for j in xrange(number_of_test_runs):
     actor = MathematicalClasses.MathematicalActor(observer,greedy_epsilon=0)
     # actor = VrepClasses.MathematicalActorExtended(observer, greedy_epsilon=0.0)
     reward = Rewards.RewardZhiwei(states_actions)
-    learner = Learning.LearningAlgorithmBen(states_actions, reward, epsilon, gamma, learning_rate)
+    learner = Learning.TDPolicyIteration(states_actions, reward, epsilon, gamma, learning_rate)
 
 
 
@@ -53,13 +55,37 @@ learner.plot_results()
 poppy_observer = VrepClasses.ObserverVrep(states_actions, positionMatrix)
 poppy_actor = VrepClasses.ActorVrep(poppy_observer)
 
-new_learner = Learning.LearningAlgorithmBen(states_actions, reward, oldData=learner.get_old_data())
+new_learner = Learning.TDPolicyIteration(states_actions, reward, epsilon, gamma, learning_rate, oldData=learner.get_old_data())
 
 for i in range(50):
     CodeFramework.main.run_episode(poppy_actor, learner, reward, poppy_observer, states_actions, max_num_iterations=100)
-    
+
 learner.plot_results()
 
 print 'Current_state: ', observer.get_current_state()
 print "Values: ", str(learner.values)
 """
+
+
+# Step 3 - RealPoppy
+################################### Initialize Poppy ###################################
+ports = pypot.dynamixel.get_available_ports()
+print('available ports:', ports)
+port = ports[0]
+print('Using the first on the list', port)
+dxl_io = pypot.dynamixel.DxlIO(port)
+print('Connected!')
+
+poppy_observer = PoppyClasses.CVStateObserver(positionMatrix)
+poppy_actor = PoppyClasses.actorPoppy(dxl_io,positionMatrix)
+
+new_learner = Learning.TDPolicyIteration(states_actions, reward, epsilon, gamma, learning_rate,
+                                            oldData=learner.get_old_data())
+
+for i in range(50):
+    CodeFramework.main.run_episode(poppy_actor, new_learner, reward, poppy_observer, states_actions, max_num_iterations=100)
+
+learner.plot_results()
+
+print 'Current_state: ', observer.get_current_state()
+print "Values: ", str(learner.values)

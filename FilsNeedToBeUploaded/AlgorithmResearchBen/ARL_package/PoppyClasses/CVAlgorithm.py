@@ -5,22 +5,21 @@ import cv2
 
 class CVAlgorithm(object):
     """ This class returns the current positon by using color detection """
-    camera_port_number = 1
     def __init__(self):
         super(CVAlgorithm, self).__init__()
         
     def takeImage(self):
         """ Take image"""
-
-
-        camera = cv2.VideoCapture(self.camera_port_number)
-
         def get_image():
             retval, im = camera.read()
             return im
+
+        camera = cv2.VideoCapture(0)
         ramp_frames = 3
         for i in xrange(ramp_frames):
             temp = get_image()
+        cv2.imshow('dd', temp)
+        cv2.waitKey(0)
         return temp
 
     def __getMask(self, image):
@@ -30,8 +29,8 @@ class CVAlgorithm(object):
         lower_blue = np.array([115,50,50])
         upper_blue = np.array([125,255,255])
 
-        lower_red = np.array([-10,50,50])
-        upper_red = np.array([10,255,255])
+        lower_red = np.array([-3,50,50])
+        upper_red = np.array([3,255,255])
 
         lower_green = np.array([50,50,50])
         upper_green = np.array([70,255,255])
@@ -81,10 +80,11 @@ class CVAlgorithm(object):
         else:
             centroid = self.__getCentroid(maskRed)
 
-        centroid = (list(centroid)[1], list(centroid)[0])
-        # cv2.drawContours(image, [np.int0([centroid, centroid, centroid, centroid])], 0, (255, 0, 0), 7)
-        # cv2.imshow('dd', image)
-        # cv2.waitKey(0)
+        c = (list(centroid)[1], list(centroid)[0])
+        cv2.drawContours(image, [np.int0([c, c, c, c])], 0, (255, 0, 0), 7)
+        cv2.imshow('dd', image)
+        cv2.waitKey(0)
+
         return (centroid, maskRed.shape)
 
 

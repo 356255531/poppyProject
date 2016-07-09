@@ -6,7 +6,7 @@ from matplotlib import pyplot
 import numpy as np
 
 
-class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
+class TDPolicyIteration(CodeFramework.LearningAlgorithm):
     def __init__( self, state_action_space, Reward, epsilon, gamma, learning_rate, oldData = dict() ):
         assert isinstance(state_action_space, CodeFramework.GridStateActionSpace2D)
         assert isinstance(Reward, CodeFramework.Reward)
@@ -61,8 +61,8 @@ class LearningAlgorithmBen(CodeFramework.LearningAlgorithm):
                     probab_currState_action_state = float(freq_per_action[self.states.index(state)]) / float(tot_number_counts)
                 else:
                     probab_currState_action_state = 1/float(len(self.states))
-                td_error = self.rewardObj.get_rewards(curr_state, action, nextState=state) + self.gamma * self.values[self.states.index(state)]
-                exp_curr_action += probab_currState_action_state * td_error
+                exp_component = self.rewardObj.get_rewards(curr_state, action, nextState=state) + self.gamma * self.values[self.states.index(state)]
+                exp_curr_action += probab_currState_action_state * exp_component
             exp_values_per_actions[self.state_action_space.get_eligible_actions(curr_state).index(action)] = exp_curr_action
         return exp_values_per_actions
 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     dummy_observer = MathematicalObserver(dummy_states_actions)
     dummy_actor = MathematicalActor(dummy_observer,greedy_epsilon=0.1)
     dummy_reward = rewardSimple()
-    dummy_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward)
+    dummy_learner = TDPolicyIteration(dummy_states_actions, dummy_reward)
 
     for i in xrange(500):
         run_episode(dummy_actor, dummy_learner, dummy_reward, dummy_observer, dummy_states_actions, max_num_iterations=100)
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     poppy_observer = ObserverVrep(dummy_states_actions,positionMatrix)
     poppy_actor = ActorVrep(poppy_observer)
 
-    new_learner = LearningAlgorithmBen(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
+    new_learner = TDPolicyIteration(dummy_states_actions, dummy_reward, oldData=dummy_learner.get_old_data())
 
     for i in range(50):
         run_episode(poppy_actor, dummy_learner, dummy_reward, poppy_observer, dummy_states_actions, max_num_iterations=100)

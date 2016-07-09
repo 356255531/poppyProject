@@ -12,7 +12,7 @@ class CVStateObserver(StateObserver, CVAlgorithm):
 		""" Return the current state """
 		a = super(CVStateObserver, self).getPosition()
 		if len(list(a)) == 0:
-			return (10000, 10000)
+			return ()
 		mm, nn = self.dimensions
 		if mm % 2 == 0:
 			mm += 1
@@ -23,20 +23,13 @@ class CVStateObserver(StateObserver, CVAlgorithm):
 		y, x = coordinate
 		n, m = shape
 
-		unitX = m / float(mm)
-		unitY = n / float(nn)
+		unitX = m / mm
+		unitY = n / nn
 		xx = floor(x / unitX)
 		yy = floor(y / unitY)
-		print 'mm', unitX
-		print 'nn', unitY
 		
 		x = int(xx - floor(mm / 2))
 		y = int(yy - floor(nn / 2))
-
-		print 'x,y:',x,-y
-		if (x < -floor(self.dimensions[0]/2) or x > floor(self.dimensions[0]/2) or
-			y < -floor(self.dimensions[1]/2) or y > floor(self.dimensions[1]/2)):
-			return (10000,10000)
 
 		return (x, -y)
 
@@ -51,6 +44,6 @@ class CVStateObserver(StateObserver, CVAlgorithm):
 		return state == (0, 0)
 
 if __name__ == '__main__':
-	dimensions = (25, 20)
+	dimensions = (5, 3)
 	observer = CVStateObserver(dimensions)
 	print observer.get_current_state()
