@@ -2,36 +2,35 @@ __author__ = 'Zhiwei Han'
 
 """ This Script will run the predefined algorithms on real poppy.
 	When you want to run your  predefined RL algorithms, firstly set up a class with your predefined algorithm model.
-	E.g.  Sarsa0InPoppy = sarsaZero(pro, epsilonGreedy, numEpisodes, learningRate, gamma).
-	And then call the class methed trainModel() to train. (It may depends on how you design your RL algorithm module)
-	In this case sarsaZero is an algorithm module which was predefined under sarsaZero.py file.
+	E.g.  sarsaZeroDummyLerner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit)
+	And then call the class methed trainModel() to train.
+
+	After learning the trained Q function in the mathematical model, it will be passed into the online learning an poppy.
+	But unfortunately, the camera breaks down and we are not able to do that with SARSA(0) and SARSA(lambda).
 	"""
 from ARL_package.StateActionSetting import StateActionSpaceMath
 
-from ARL_package.Reward import RewardZhiwei
-from ARL_package.Reward import RewardBen
+from ARL_package.Reward import RewardZhiwei, RewardBen
 
 from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApxt
 
-from ARL_package.CodeFramework import PlotAgent
-from ARL_package.CodeFramework import GridStateActionSpace2D
+from ARL_package.CodeFramework import PlotAgent, GridStateActionSpace2D
 
 from ARL_package.StateActionSetting import StateActionSpaceMath, StateActionSpaceVrep
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-dimension = (9, 7)					# Number of state setting
-epsilonGreedy = 0.6					# Epsilon used in epsilonGreedy method	
+dimension = (5, 3)					# Number of state setting
+epsilonGreedy = 0.2					# Epsilon used in epsilonGreedy method	
 learningRate = 0.1					# learningRate
 gamma = 0.7							# Discount coefficient used in computation of TD error
-numEpisodes = 4500					# Number of Episodes used in trainning
+numEpisodes = 1000					# Number of Episodes used in trainning
 lambdaDiscount = 0.5				# Lambda in SarsaLambda algorithm
-iterNumLimit = 500					# Iteration number Limit
-
+iterNumLimit = 50					# Iteration number Limit
 
 ################################### Reinforcement Learning with Mathematical Model ###################################
-## Initialize MathModel and Create Objects
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
 
+print 'Initializing the modules'
 dummyStateActionSpace = StateActionSpaceMath(dimension)
 # dummyStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
 dummyObserver = MathematicalObserver(dummyStateActionSpace)
@@ -39,26 +38,25 @@ dummyActor = MathematicalActor(dummyObserver)
 dummyReward = RewardZhiwei(dummyStateActionSpace)
 # dummyReward = RewardBen(dummyStateActionSpace)
 
-dummyProblem = ProblemDummy(dummyObserver, dummyActor, 
-	dummyReward, dummyStateActionSpace)
+dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateActionSpace)
 
-plotAgent = PlotAgent(dimension)
+plotAgent = PlotAgent(dimension)						# If plots are not needed can set plotAgent = None
 # plotAgent = None
 
-## Reinforcement Learning with Mathmatical Model
-sarsaZeroDummyLerner = SarsaZero(dummyProblem, epsilonGreedy, 
-	numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
-sarsaLambdaDummyLerner = SarsaLambda(dummyProblem, epsilonGreedy, 
-	numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
+print 'Initializing reinforcement algorithm lerner'
+sarsaZeroDummyLerner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
+sarsaLambdaDummyLerner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
 
-## Train Model
+print 'Training model'
 # sarsaZeroDummyLerner.train_model()
 sarsaLambdaDummyLerner.train_model()
 
-print 'Policy is'
+print 'Outputing policy'
+print 'The policy is:'
 # print sarsaZeroDummyLerner.get_policy()
 print sarsaLambdaDummyLerner.get_policy()
 
+print 'Exporting the Q function'
 qFunc = sarsaZeroDummyLerner.export_qFunc()
 # # qFunc = sarsaLambdaDummyLerner.export_qFunc()
 
@@ -67,62 +65,45 @@ from ARL_package.VrepClasses import ObserverVrep, ActorVrep, ProblemVrep
 
 from time import sleep
 
-# poppy = PoppyTorso(simulator='vrep')
-
-# io = poppy._controllers[0].io
-# name1 = 'support'
-# position1 = [-0.4, -1, 0.5]
-# sizes1 = [3, 1, 1]
-# mass1 = 0  # in kg
-# io.add_cube(name1, position1, sizes1, mass1)
-
-# sleep(1)
-# name2 = 'cube'
-# position2 = [0, -1, 1.05]  # X, Y, Z
-# sizes2 = [0.1, 0.1, 0.1]  # in meters
-# mass2 = 0  # in kg
-# io.add_cube(name2, position2, sizes2, mass2)
-
+print 'Initializing the modules'
 vrepStateActionSpace = StateActionSpaceVrep(dimension)
 # vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
 vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
 vrepActor = ActorVrep(vrepObserver)
 vrepReward = RewardZhiwei(vrepStateActionSpace)
 
-vrepProblem = ProblemVrep(vrepObserver, vrepActor, 
-	vrepReward, vrepStateActionSpace)
+vrepProblem = ProblemVrep(vrepObserver, vrepActor, vrepReward, vrepStateActionSpace)
 
-vrepActor.initialise_episode()
-print 'fake', vrepObserver.get_current_state()
-plotAgent = PlotAgent(dimension)
+plotAgent = PlotAgent(dimension)						# If plots are not needed can set plotAgent = None
+# plotAgent = None
 
-## Reinforcement Learning with Mathmatical Model
-sarsaZeroVrepLerner = SarsaZero(vrepProblem, epsilonGreedy, 
-	numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, qFunc)
-sarsaLambdaVrepLerner = SarsaLambda(vrepProblem, epsilonGreedy, 
-	numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
+# print 'Initializing reinforcement algorithm lerner'
+# sarsaZeroVrepLerner = SarsaZero(vrepProblem, epsilonGreedy, 
+# 	numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, qFunc)
+# sarsaLambdaVrepLerner = SarsaLambda(vrepProblem, epsilonGreedy, 
+# 	numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
 
-vrepProblem.get_initial_state()
-print vrepProblem.get_current_state()
-## Train Model
+# print 'Training model'
 # sarsaZeroVrepLerner.train_model()
-# sarsaLambdaVrepLerner.train_model()
+# # sarsaLambdaVrepLerner.train_model()
 
-print 'Policy is'
-print sarsaZeroVrepLerner.get_policy()
-# print sarsaLambdaVrepLerner.get_policy()
+# print 'Outputing policy'
+# print 'The policy is:'
+# print sarsaZeroVrepLerner.get_policy()
+# # print sarsaLambdaVrepLerner.get_policy()
 
+# print 'Exporting the Q function'
 # qFunc = sarsaZeroVrepLerner.export_qFunc()
-# qFunc = sarsaLambdaDummyLerner.export_qFunc()
-################################### Reinforcement Learning with Real Poppy ###################################
+# # qFunc = sarsaLambdaDummyLerner.export_qFunc()
 
-# ## Initialize Poppy
+# ################################### Reinforcement Learning with Real Poppy ###################################
 # from ARL_package.PoppyClasses import ProblemPoppy, CVStateObserver, ActorPoppy
 # from ARL_package.StateActionSetting import StateActionSpacePoppy
 
 
 # import pypot.dynamixel
 
+# print 'Initializing poppy'
 # ports = pypot.dynamixel.get_available_ports()
 # print('available ports:', ports)
 
@@ -132,7 +113,7 @@ print sarsaZeroVrepLerner.get_policy()
 # dxl_io = pypot.dynamixel.DxlIO(port)
 # print('Connected!')
 
-# # Create Objects Requried by RL Algorithm
+# print 'Initializing the modules'
 # poppyStateActionSpace = StateActionSpacePoppy(dimension)
 # poppyObserver = CVStateObserver(dimension)
 # poppyActor = ActorPoppy(dxl_io, dimension)
@@ -141,16 +122,19 @@ print sarsaZeroVrepLerner.get_policy()
 # poppyProblem = ProblemPoppy(poppyObserver, poppyActor, 
 # 	poppyReward, poppyStateActionSpace)
 
-# ## Reinforcement Learning with Real Poppy
-# SarsaZeroPoppyLerner = SarsaZero(dummyProblem, epsilonGreedy, 
-# 	numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, qFunc)
-# sarsaLambdaPoppyLerner = SarsaLambda(dummyProblem, epsilonGreedy, 
-# 	numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
+# print 'Initializing reinforcement algorithm lerner'
+# SarsaZeroPoppyLerner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, qFunc)
+# sarsaLambdaPoppyLerner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, qFunc)
 
-# ## Train Model
+# print 'Trainning model'
 # sarsaZeroPoppyLerner.train_model()
 # # sarsaLambdaPoppyLerner.train_model()
 
-# print 'Policy is'
+# print 'Outputing policy'
+# print 'The policy is:'
 # print sarsaZeroPoppyLerner.get_policy()
 # # print sarsaLambdaPoppyLerner.get_policy()
+
+# print 'Exporting the Q function'
+# qFunc = SarsaZeroPoppyLerner.export_qFunc()
+# # qFunc = sarsaLambdaPoppyLerner.export_qFunc()
