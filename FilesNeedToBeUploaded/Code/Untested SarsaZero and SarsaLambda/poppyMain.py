@@ -1,13 +1,13 @@
 __author__ = 'Zhiwei Han'
 
 """ This Script will run the predefined algorithms on mathematical model as well as on Vrep.
-	It should work an real poppy but due to the camera broken it has never been tested.
-	When you want to run your  predefined RL algorithms, just uncomment one algorithm in {choosing reinforcement learning learner}.
+    It should work an real poppy but due to the camera broken it has never been tested.
+    When you want to run your  predefined RL algorithms, just uncomment one algorithm in {choosing reinforcement learning learner}.
 
-	Please note, since it will pass the learned parameters in mathematical model into next learning platform(Vrep or real poppy). 
-	Make sure to use the same kind of algorithms in learning (Sarsa(0) can together with Sarsa(lambda) with Q function).
+    Please note, since it will pass the learned parameters in mathematical model into next learning platform(Vrep or real poppy). 
+    Make sure to use the same kind of algorithms in learning (Sarsa(0) can together with Sarsa(lambda) with Q function).
 
-	"""
+    """
 from ARL_package.StateActionSetting import StateActionSpaceMath
 
 from ARL_package.Reward import RewardZhiwei, RewardBen
@@ -19,13 +19,13 @@ from ARL_package.CodeFramework import PlotAgent, PlotAgentValueFunc, GridStateAc
 from ARL_package.StateActionSetting import StateActionSpaceMath, StateActionSpaceVrep
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-dimension = (5, 3)					# Number of state setting
-epsilonGreedy = 0.5					# Epsilon used in epsilonGreedy method	
-learningRate = 0.1					# learningRate
-gamma = 0.7							# Discount coefficient used in computation of TD error
-numEpisodes = 1000					# Number of Episodes used in trainning
-lambdaDiscount = 0.5				# Lambda in SarsaLambda algorithm
-iterNumLimit = 50					# Iteration number Limit
+dimension = (5, 3)            # Number of state setting
+epsilonGreedy = 0.5           # Epsilon used in epsilonGreedy method  
+learningRate = 0.1            # learningRate
+gamma = 0.7                  # Discount coefficient used in computation of TD error
+numEpisodes = 1000            # Number of Episodes used in trainning
+lambdaDiscount = 0.5          # Lambda in SarsaLambda algorithm
+iterNumLimit = 50             # Iteration number Limit
 
 ################################### Reinforcement Learning with Mathematical Model ###################################
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
@@ -45,11 +45,11 @@ dummyReward = RewardZhiwei(dummyStateActionSpace)
 print 'Creating training world'
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateActionSpace)
 
-print 'Choosing reinforcement algorithm lerner'		# Choose learning algorithm by uncommenting one of them
-# dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
+print 'Choosing reinforcement algorithm lerner'     # Choose learning algorithm by uncommenting one of them
+dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
 # dummyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
 
-print 'Training model'					
+print 'Training model'            
 dummyLearner.train_model()
 
 print 'Outputing policy'
