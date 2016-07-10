@@ -1,12 +1,15 @@
 1 BRIEF DESCRIPTION
-We have three different policies:
-- A pre-final version of the TD Policy Iteration was 
+We have three different learning algorithm implementations:
+- TD Policy Iteration
+- Sarsa(0) and Sarsa(lambda)
+- A pre-final version of the TD Policy Iteration that was 
 tested on the real poppy
-- The others could not be tested, as the camera broke
-in the last week.
 
-Untested means, they were not tested on the real poppy,
-but on vrep as well as in the mathematical domain.
+The two first were tested on vrep as well as in a deterministic
+state modeling ("mathematical" domain), but unfortunately not on a real poppy
+robot due to hardware failiure (broken camera). The third is a pre-final version
+that was tested on a real poppy, which was recorded (Images and Video/Demovideo.m4v).
+"[Un]Tested" below refers to tested on a real poppy robot.
 
 2 HOW TO
 Run
@@ -24,4 +27,4 @@ Untested TD Policy-Iteraion/PoppyMain.py
 
 OR (for the latest SARSA-algorithms)
 
-Untested SarsaZero and SarsaLambdd/poppyMain.py
+Untested SarsaZero and SarsaLambda/poppyMain.py
