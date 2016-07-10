@@ -1,3 +1,4 @@
+__author__ = 'Zhiwei Han'
 from ..CodeFramework.StateObserver import StateObserver
 from CVAlgorithm import CVAlgorithm
 from math import floor

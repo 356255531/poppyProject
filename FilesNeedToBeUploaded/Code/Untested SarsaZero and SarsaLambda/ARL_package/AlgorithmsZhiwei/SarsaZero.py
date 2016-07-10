@@ -1,6 +1,6 @@
 __author__ = 'Zhiwei Han'
 
-from ARL_package.CodeFramework.LearningAlgorithm import LearningAlgorithm
+from ..CodeFramework.LearningAlgorithm import LearningAlgorithm
 
 import numpy as np
 from random import random, randint
