@@ -53,7 +53,7 @@ class TDZero(LearningAlgorithm):
 
 		return valueFunc, policy
 		
-	def export_oldData(self, oldData):
+	def export_oldData(self):
 		oldData = {}
 		oldData['policy'] = self.policy
 		oldData['values'] = self.valueFunc

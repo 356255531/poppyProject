@@ -20,15 +20,21 @@ class SarsaZero(LearningAlgorithm):
 
 		self.stateSpace = self.problem.get_list_of_states()  		# Initialize the state list
 		self.actionSpace = self.problem.get_list_of_actions()		# Initialize the action list
-		if qFunc:
-			self.qFunc = qFunc
-		else:
-			self.qFunc = self.init_qFunc()
+		self.qFunc = self.import_oldData(qFunc)
 
 		self.plotAgent = plotAgent	
 		self.diagInfo = []
 		self.qFuncHistory = []
 		self.policyHistory = []
+
+	def import_oldData(self, oldData):
+		if oldData:
+			if oldData.has_key('Q Function'):
+				qFunc = oldData['Q Function']
+		else:
+			qFunc = self.init_qFunc()  # changed it from self.actions to self.states
+
+		return qFunc
 
 	def init_qFunc(self):
 		""" Initialize the Q function 
@@ -140,8 +146,10 @@ class SarsaZero(LearningAlgorithm):
 			policy[i] = optimalAction
 		return policy
 
-	def export_qFunc(self):
-		return self.qFunc
+	def export_oldData(self):
+		oldData = {}
+		oldData['Q Function'] = self.qFunc
+		return oldData
 
 	def plot(self, diagInfo, qFuncHistory, policyHistory):
 		"""

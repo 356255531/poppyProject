@@ -20,10 +20,7 @@ class SarsaLambda(LearningAlgorithm):
 
 		self.stateSpace = self.problem.get_list_of_states()  		# Initialize the state list
 		self.actionSpace = self.problem.get_list_of_actions()		# Initialize the action list
-		if qFunc:
-			self.qFunc = qFunc
-		else:
-			self.qFunc = self.init_qFfunc()							# Initialize the Q function
+		self.qFunc = self.import_oldData(qFunc)						# Initialize the Q function
 		self.eligibility = self.init_eligibility()				# Initialize the Eligibility
 
 		self.plotAgent = plotAgent	
@@ -31,7 +28,16 @@ class SarsaLambda(LearningAlgorithm):
 		self.qFuncHistory = []
 		self.policyHistory = []
 
-	def init_qFfunc(self):
+	def import_oldData(self, oldData):
+		if oldData:
+			if oldData.has_key('Q Function'):
+				qFunc = oldData['Q Function']
+		else:
+			qFunc = self.init_qFunc()  # changed it from self.actions to self.states
+
+		return qFunc
+
+	def init_qFunc(self):
 		""" Initialize the Q function 
 			used in constructor """
 		qFunc = {}
@@ -143,8 +149,10 @@ class SarsaLambda(LearningAlgorithm):
 			policy[i] = optimalAction
 		return policy
 
-	def export_qFunc(self):
-		return self.qFunc
+	def export_oldData(self):
+		oldData = {}
+		oldData['Q Function'] = self.qFunc
+		return oldData
 
 	def plot(self, diagInfo, qFuncHistory, policyHistory):
 		"""
