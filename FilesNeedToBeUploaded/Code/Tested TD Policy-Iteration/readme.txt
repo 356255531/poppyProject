@@ -1,5 +1,3 @@
-As it is a pre-final result, the code environment
-was not entirely clean. But as we wanted to ensure
-the functionality, we did not change much afterwards.
-- However, some functions are redundante and some variable
-names may be misleading in this earlier version.
+- added __init__.py files to allow for subfolder calls
+- In the main-file of the code-framework I provided a stopping condition as well as print command
+(however, that does not affect the interaction with the modules and can be replaced)
