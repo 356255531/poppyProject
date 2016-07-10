@@ -92,45 +92,45 @@ print vrepLearner.get_policy()
 print 'Exporting the old data'
 oldData = vrepLearner.export_oldData()
 
-# ################################ Reinforcement Learning with Real Poppy ###################################
-# from ARL_package.PoppyClasses import ProblemPoppy, CVStateObserver, ActorPoppy
-# from ARL_package.StateActionSetting import StateActionSpacePoppy
+################################ Reinforcement Learning with Real Poppy ###################################
+from ARL_package.PoppyClasses import ProblemPoppy, CVStateObserver, ActorPoppy
+from ARL_package.StateActionSetting import StateActionSpacePoppy
 
 
-# import pypot.dynamixel
+import pypot.dynamixel
 
-# print 'Initializing poppy'
-# ports = pypot.dynamixel.get_available_ports()
-# print('available ports:', ports)
+print 'Initializing poppy'
+ports = pypot.dynamixel.get_available_ports()
+print('available ports:', ports)
 
-# port = ports[0]
-# print('Using the first on the list', port)
+port = ports[0]
+print('Using the first on the list', port)
 
-# dxl_io = pypot.dynamixel.DxlIO(port)
-# print('Connected!')
+dxl_io = pypot.dynamixel.DxlIO(port)
+print('Connected!')
 
-# print 'Initializing the modules'
-# poppyStateActionSpace = StateActionSpacePoppy(dimension)
-# poppyObserver = CVStateObserver(dimension)
-# poppyActor = ActorPoppy(dxl_io, dimension)
+print 'Initializing the modules'
+poppyStateActionSpace = StateActionSpacePoppy(dimension)
+poppyObserver = CVStateObserver(dimension)
+poppyActor = ActorPoppy(dxl_io, dimension)
 
-# print 'Choosing reward'
-# poppyReward = RewardZhiwei()
+print 'Choosing reward'
+poppyReward = RewardZhiwei()
 
-# print 'Creating training world'
-# poppyProblem = ProblemPoppy(poppyObserver, poppyActor, poppyReward, poppyStateActionSpace)
+print 'Creating training world'
+poppyProblem = ProblemPoppy(poppyObserver, poppyActor, poppyReward, poppyStateActionSpace)
 
-# print 'Initializing reinforcement algorithm Learner'
-# # poppyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
-# # poppyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, oldData)
-# # poppyLearner = TDZero(poppyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc, oldData)
+print 'Initializing reinforcement algorithm Learner'
+# poppyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
+# poppyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, oldData)
+# poppyLearner = TDZero(poppyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc, oldData)
 
-# print 'Trainning model'
-# poppyLearner.train_model()
+print 'Trainning model'
+poppyLearner.train_model()
 
-# print 'Outputing policy'
-# print 'The policy is:'
-# print poppyLearner.get_policy()
+print 'Outputing policy'
+print 'The policy is:'
+print poppyLearner.get_policy()
 
-# print 'Exporting the old data'
-# oldData = poppyLearner.export_oldData()
+print 'Exporting the old data'
+oldData = poppyLearner.export_oldData()
