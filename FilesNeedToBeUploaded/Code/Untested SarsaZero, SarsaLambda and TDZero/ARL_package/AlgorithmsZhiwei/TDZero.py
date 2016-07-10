@@ -1,4 +1,4 @@
-__author__ = 'ben'
+__author__ = 'Zhiwei Han'
 
 from ..CodeFramework.LearningAlgorithm import LearningAlgorithm
 

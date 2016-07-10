@@ -12,8 +12,7 @@ from ARL_package.StateActionSetting import StateActionSpaceMath
 
 from ARL_package.Reward import RewardZhiwei, RewardBen
 
-from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApxt
-from ARL_package.AlgorithmsBen import TDZero
+from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApxt, TDZero
 
 from ARL_package.CodeFramework import PlotAgent, PlotAgentValueFunc, GridStateActionSpace2D
 
@@ -48,7 +47,7 @@ print 'Creating training world'
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateActionSpace)
 
 print 'Choosing reinforcement algorithm lerner'		# Choose learning algorithm by uncommenting one of them
-dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
+# dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
 # dummyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
 # dummyLearner = TDZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc)
 
@@ -79,7 +78,7 @@ print 'Creating training world'
 vrepProblem = ProblemVrep(vrepObserver, vrepActor, vrepReward, vrepStateActionSpace)
 
 print 'Initializing reinforcement algorithm learner'
-vrepLearner = SarsaZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
+# vrepLearner = SarsaZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
 # vrepLearner = SarsaLambda(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, oldData)
 # vrepLearner = TDZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc, oldData)
 
