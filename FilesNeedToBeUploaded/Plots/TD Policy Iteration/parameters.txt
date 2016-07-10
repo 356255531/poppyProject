@@ -1,0 +1,7 @@
+positionMatrix = (9, 7)
+num_episodes = 50
+epsilon = 0.1
+gamma = 0.7
+learning_rate = 0.1
+
+with vrepMain in the mathematical domain.
