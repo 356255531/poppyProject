@@ -62,12 +62,9 @@ class actorPoppy(Actor):
 
 	def initialise_episode(self):
 		""" Initialize by changing the position of red point """
-<<<<<<< HEAD
-		self.come_to_zero
-=======
 		self.come_to_zero()
 		pass
->>>>>>> 6d05284cf9215df6a46e94160b151510cc29ab09
+
 
 if __name__ == '__main__':
 	""" Only for testing and need not to be modified """
