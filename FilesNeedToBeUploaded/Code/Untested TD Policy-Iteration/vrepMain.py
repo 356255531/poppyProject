@@ -49,7 +49,7 @@ print "Values: ", str(learner.values)
 
 learner.plot_results()
 
-"""
+# """
 # Step 2 - Vrep-Simulation
 poppy_observer = VrepClasses.ObserverVrep(states_actions, positionMatrix)
 poppy_actor = VrepClasses.ActorVrep(poppy_observer)
@@ -63,4 +63,4 @@ learner.plot_results()
 
 print 'Current_state: ', observer.get_current_state()
 print "Values: ", str(learner.values)
-"""
+#"""
