@@ -13,19 +13,20 @@ from ARL_package.StateActionSetting import StateActionSpaceMath
 from ARL_package.Reward import RewardZhiwei, RewardBen
 
 from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApxt
+from ARL_package.AlgorithmsBen import TDZero
 
-from ARL_package.CodeFramework import PlotAgent, GridStateActionSpace2D
+from ARL_package.CodeFramework import PlotAgent, PlotAgentValueFunc, GridStateActionSpace2D
 
 from ARL_package.StateActionSetting import StateActionSpaceMath, StateActionSpaceVrep
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-dimension = (5, 3)					# Number of state setting
-epsilonGreedy = 0.2					# Epsilon used in epsilonGreedy method	
+dimension = (9, 7)					# Number of state setting
+epsilonGreedy = 0.6					# Epsilon used in epsilonGreedy method	
 learningRate = 0.1					# learningRate
 gamma = 0.7							# Discount coefficient used in computation of TD error
-numEpisodes = 1000					# Number of Episodes used in trainning
+numEpisodes = 4500					# Number of Episodes used in trainning
 lambdaDiscount = 0.5				# Lambda in SarsaLambda algorithm
-iterNumLimit = 50					# Iteration number Limit
+iterNumLimit = 500					# Iteration number Limit
 
 ################################### Reinforcement Learning with Mathematical Model ###################################
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
@@ -41,40 +42,44 @@ dummyReward = RewardZhiwei(dummyStateActionSpace)
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateActionSpace)
 
 plotAgent = PlotAgent(dimension)						# If plots are not needed can set plotAgent = None
+plotAgentValueFunc = PlotAgentValueFunc(dimension)
 # plotAgent = None
 
 print 'Initializing reinforcement algorithm lerner'
 sarsaZeroDummyLerner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
 sarsaLambdaDummyLerner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
+TDZeroDummyLerner = TDZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc)
 
 print 'Training model'
 # sarsaZeroDummyLerner.train_model()
-sarsaLambdaDummyLerner.train_model()
+# sarsaLambdaDummyLerner.train_model()
+TDZeroDummyLerner.train_model()
 
 print 'Outputing policy'
 print 'The policy is:'
 # print sarsaZeroDummyLerner.get_policy()
-print sarsaLambdaDummyLerner.get_policy()
+# print sarsaLambdaDummyLerner.get_policy()
+print TDZeroDummyLerner.get_policy()
 
 print 'Exporting the Q function'
 qFunc = sarsaZeroDummyLerner.export_qFunc()
 # # qFunc = sarsaLambdaDummyLerner.export_qFunc()
 
-################################### Reinforcement Learning with Vrep ###################################
-from ARL_package.VrepClasses import ObserverVrep, ActorVrep, ProblemVrep
+# ################################### Reinforcement Learning with Vrep ###################################
+# from ARL_package.VrepClasses import ObserverVrep, ActorVrep, ProblemVrep
 
-from time import sleep
+# from time import sleep
 
-print 'Initializing the modules'
-vrepStateActionSpace = StateActionSpaceVrep(dimension)
-# vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
-vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
-vrepActor = ActorVrep(vrepObserver)
-vrepReward = RewardZhiwei(vrepStateActionSpace)
+# print 'Initializing the modules'
+# vrepStateActionSpace = StateActionSpaceVrep(dimension)
+# # vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
+# vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
+# vrepActor = ActorVrep(vrepObserver)
+# vrepReward = RewardZhiwei(vrepStateActionSpace)
 
-vrepProblem = ProblemVrep(vrepObserver, vrepActor, vrepReward, vrepStateActionSpace)
+# vrepProblem = ProblemVrep(vrepObserver, vrepActor, vrepReward, vrepStateActionSpace)
 
-plotAgent = PlotAgent(dimension)						# If plots are not needed can set plotAgent = None
+# plotAgent = PlotAgent(dimension)						# If plots are not needed can set plotAgent = None
 # plotAgent = None
 
 # print 'Initializing reinforcement algorithm lerner'
