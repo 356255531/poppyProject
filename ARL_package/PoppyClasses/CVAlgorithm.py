@@ -3,6 +3,7 @@ import numpy as np
 import math
 import cv2    
 
+# Reference: http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
 class CVAlgorithm(object):
     """ This class returns the current positon by using color detection """
     camera_port_number = 1
