@@ -12,7 +12,7 @@ from ARL_package.StateActionSetting import StateActionSpaceMath
 
 from ARL_package.Reward import RewardZhiwei, RewardBen
 
-from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApxt, TDZero
+from ARL_package.AlgorithmsZhiwei import SarsaZero, SarsaLambda, SarsaWithLinApxt
 
 from ARL_package.CodeFramework import PlotAgent, PlotAgentValueFunc, GridStateActionSpace2D
 
@@ -36,7 +36,6 @@ dummyObserver = MathematicalObserver(dummyStateActionSpace)
 dummyActor = MathematicalActor(dummyObserver)
 
 plotAgent = PlotAgent(dimension)
-plotAgentValueFunc = PlotAgentValueFunc(dimension)
 # plotAgent = None
 
 print 'Choosing reward'
@@ -49,7 +48,6 @@ dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateAc
 print 'Choosing reinforcement algorithm lerner'		# Choose learning algorithm by uncommenting one of them
 # dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
 # dummyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
-# dummyLearner = TDZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc)
 
 print 'Training model'					
 dummyLearner.train_model()
@@ -80,7 +78,6 @@ vrepProblem = ProblemVrep(vrepObserver, vrepActor, vrepReward, vrepStateActionSp
 print 'Initializing reinforcement algorithm learner'
 # vrepLearner = SarsaZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
 # vrepLearner = SarsaLambda(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, oldData)
-# vrepLearner = TDZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc, oldData)
 
 print 'Training model'
 vrepLearner.train_model()
@@ -123,7 +120,6 @@ poppyProblem = ProblemPoppy(poppyObserver, poppyActor, poppyReward, poppyStateAc
 print 'Initializing reinforcement algorithm Learner'
 # poppyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
 # poppyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, oldData)
-# poppyLearner = TDZero(poppyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc, oldData)
 
 print 'Trainning model'
 poppyLearner.train_model()
