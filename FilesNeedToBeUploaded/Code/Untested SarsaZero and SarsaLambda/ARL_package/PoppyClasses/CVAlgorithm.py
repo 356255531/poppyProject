@@ -2,7 +2,6 @@ __author__ = 'Zhiwei Han'
 import numpy as np
 import math
 import cv2    
-
 class CVAlgorithm(object):
     """ This class returns the current positon by using color detection """
     def __init__(self):
@@ -21,7 +20,10 @@ class CVAlgorithm(object):
         return temp
 
     def __getMask(self, image):
-        """ Get binary mask of the image """
+        """ Get binary mask of the image 
+            This algorithm has been referenced from 
+            http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
+            """
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         lower_blue = np.array([115,50,50])

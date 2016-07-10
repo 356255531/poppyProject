@@ -24,4 +24,4 @@ Untested TD Policy-Iteraion/PoppyMain.py
 
 OR (for the latest SARSA-algorithms)
 
-Untested SarsaZero, SarsaLambdd and TDZero/poppyMain.py
+Untested SarsaZero and SarsaLambdd/poppyMain.py
