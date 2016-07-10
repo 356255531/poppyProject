@@ -52,7 +52,6 @@ class SarsaZero(LearningAlgorithm):
 			action = actions[randint(0, len(actions) - 1)]
 			return action
 		else:
-			print currentState
 			actions = self.qFunc[currentState]
 			action = max(actions.iteritems(), key=operator.itemgetter(1))[0]
 			return action

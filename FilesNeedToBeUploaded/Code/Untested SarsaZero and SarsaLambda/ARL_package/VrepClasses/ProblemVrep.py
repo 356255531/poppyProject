@@ -24,6 +24,7 @@ class ProblemVrep(TrainningWorld):
 
 	def get_initial_state(self):
 		self.actor.initialise_episode()
+		return self.get_current_state()
 
 	def get_list_of_states(self):
 		return self.stateSpace

@@ -1,12 +1,12 @@
 __author__ = 'Zhiwei Han'
 
-""" This Script will run the predefined algorithms on real poppy.
-	When you want to run your  predefined RL algorithms, firstly set up a class with your predefined algorithm model.
-	E.g.  sarsaZeroDummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit)
-	And then call the class methed trainModel() to train.
+""" This Script will run the predefined algorithms on mathematical model as well as on Vrep.
+	It should work an real poppy but due to the camera broken it has never been tested.
+	When you want to run your  predefined RL algorithms, just uncomment one algorithm in {choosing reinforcement learning learner}.
 
-	After learning the trained Q function in the mathematical model, it will be passed into the online learning an poppy.
-	But unfortunately, the camera breaks down and we are not able to do that with SARSA(0) and SARSA(lambda).
+	Please note, since it will pass the learned parameters in mathematical model into next learning platform(Vrep or real poppy). 
+	Make sure to use the same kind of algorithms in learning (Sarsa(0) can together with Sarsa(lambda) with Q function).
+
 	"""
 from ARL_package.StateActionSetting import StateActionSpaceMath
 
@@ -20,20 +20,19 @@ from ARL_package.CodeFramework import PlotAgent, PlotAgentValueFunc, GridStateAc
 from ARL_package.StateActionSetting import StateActionSpaceMath, StateActionSpaceVrep
 
 ################################### Reinforcement Learning Parameters Setting ###################################
-dimension = (9, 7)					# Number of state setting
-epsilonGreedy = 0.6					# Epsilon used in epsilonGreedy method	
+dimension = (5, 3)					# Number of state setting
+epsilonGreedy = 0.5					# Epsilon used in epsilonGreedy method	
 learningRate = 0.1					# learningRate
 gamma = 0.7							# Discount coefficient used in computation of TD error
-numEpisodes = 4500					# Number of Episodes used in trainning
+numEpisodes = 1000					# Number of Episodes used in trainning
 lambdaDiscount = 0.5				# Lambda in SarsaLambda algorithm
-iterNumLimit = 500					# Iteration number Limit
+iterNumLimit = 50					# Iteration number Limit
 
 ################################### Reinforcement Learning with Mathematical Model ###################################
 from ARL_package.MathematicalClasses import MathematicalActor, MathematicalObserver, ProblemDummy
 
 print 'Initializing the modules'
 dummyStateActionSpace = StateActionSpaceMath(dimension)
-# dummyStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
 dummyObserver = MathematicalObserver(dummyStateActionSpace)
 dummyActor = MathematicalActor(dummyObserver)
 
@@ -49,7 +48,7 @@ print 'Creating training world'
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateActionSpace)
 
 print 'Choosing reinforcement algorithm lerner'		# Choose learning algorithm by uncommenting one of them
-# dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
+dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
 # dummyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
 # dummyLearner = TDZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc)
 
@@ -70,7 +69,6 @@ from time import sleep
 
 print 'Initializing the modules'
 vrepStateActionSpace = StateActionSpaceVrep(dimension)
-# vrepStateActionSpace = GridStateActionSpace2D(dimensions=dimension,allow_diag_actions=True)
 vrepObserver = ObserverVrep(vrepStateActionSpace, dimension)
 vrepActor = ActorVrep(vrepObserver)
 
@@ -81,7 +79,7 @@ print 'Creating training world'
 vrepProblem = ProblemVrep(vrepObserver, vrepActor, vrepReward, vrepStateActionSpace)
 
 print 'Initializing reinforcement algorithm learner'
-# vrepLearner = SarsaZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
+vrepLearner = SarsaZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent, oldData)
 # vrepLearner = SarsaLambda(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent, oldData)
 # vrepLearner = TDZero(vrepProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgentValueFunc, oldData)
 
