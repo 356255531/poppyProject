@@ -46,7 +46,7 @@ print 'Creating training world'
 dummyProblem = ProblemDummy(dummyObserver, dummyActor, dummyReward, dummyStateActionSpace)
 
 print 'Choosing reinforcement algorithm lerner'     # Choose learning algorithm by uncommenting one of them
-dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
+# dummyLearner = SarsaZero(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, iterNumLimit, plotAgent)
 # dummyLearner = SarsaLambda(dummyProblem, epsilonGreedy, numEpisodes, learningRate, gamma, lambdaDiscount, iterNumLimit, plotAgent)
 
 print 'Training model'            
