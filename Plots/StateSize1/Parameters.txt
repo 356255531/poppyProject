@@ -1,7 +1,0 @@
-dimension = (5, 3)		# Number of state setting
-epsilonGreedy = 0.2		# Epsilon used in epsilonGreedy method	
-learningRate = 0.1		# learningRate
-gamma = 0.5			# Discount coefficient used in computation of TD error
-numEpisodes = 400		# Number of Episodes used in training
-lambdaDiscount = 0.5		# Lambda in SarsaLambda algorithm
-iterNumLimit = 50		# Iteration number Limit

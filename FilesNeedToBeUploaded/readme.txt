@@ -3,3 +3,6 @@ These are our files of the Poppy Project team.
 the simulator first.
 - All the other information is given in the respective
 folders.
+
+Team members:
+Ben Pfirrmann, Erik Wannerberg, Zhiwei Han
